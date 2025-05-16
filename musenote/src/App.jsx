@@ -14,7 +14,6 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/home" element={<HomePage />} />
-        {/* Add other routes here as your application grows */}
       </Routes>
     </Router>
   );

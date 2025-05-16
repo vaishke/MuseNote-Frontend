@@ -6,7 +6,6 @@
   flex-direction: column;
 }
 
-/* Top bar with logo on left and profile on right */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -14,13 +13,11 @@
   padding: 20px 40px;
 }
 
-/* Logo section (top-left) */
 .logo-container {
   display: flex;
   align-items: center;
 }
 
-/* Profile section (top-right) */
 .profile-container {
   display: flex;
   align-items: center;
@@ -34,7 +31,6 @@
   font-size: 16px;
 }
 
-/* Page content */
 .content {
   text-align: center;
   margin-top: 100px;

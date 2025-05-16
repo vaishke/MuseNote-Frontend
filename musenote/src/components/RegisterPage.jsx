@@ -9,7 +9,6 @@ const RegisterPage = () => {
 
   const handleRegister = () => {
     console.log('Register attempt:', username, email, password);
-    // Add registration logic here (e.g., API call)
   };
 
   return (

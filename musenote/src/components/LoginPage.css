@@ -1,4 +1,3 @@
-/* Full-screen layout */
 .login-page {
   display: flex;
   flex-direction: column;
@@ -8,13 +7,11 @@
   background-color: #000;
 }
 
-/* Logo at the top */
 .logo-section {
   margin-bottom: 50px;
   margin-left: -560px;
 }
 
-/* Centered login box */
 .login-form-container {
   margin-left: 500px;
   margin-bottom: 70px;
@@ -33,7 +30,6 @@
   text-align: center;
 }
 
-/* Input and button styles */
 .login-input {
   width: 100%;
   padding: 12px;
