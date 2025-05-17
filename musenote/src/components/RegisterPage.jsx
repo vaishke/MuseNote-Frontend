@@ -6,9 +6,10 @@ const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [bio, setBio] = useState('');
 
   const handleRegister = () => {
-    console.log('Register attempt:', username, email, password);
+    console.log('Register attempt:', username, email, password, bio);
   };
 
   return (
@@ -38,6 +39,13 @@ const RegisterPage = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="register-input"
+          />
+          <input
+            type="text"
+            placeholder="Bio"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
             className="register-input"
           />
           <button onClick={handleRegister} className="register-button">

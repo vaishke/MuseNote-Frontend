@@ -5,6 +5,9 @@ import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import HomePage from './components/HomePage';
 import ProfilePage  from './components/ProfilePage';
+import PostView from './components/PostView';
+import PostCreate from './components/PostCreate';
+
 import './App.css'; 
 
 function App() {
@@ -16,6 +19,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/post" element={<PostView />} />
+        <Route path="/create" element={<PostCreate />} />
       </Routes>
     </Router>
   );

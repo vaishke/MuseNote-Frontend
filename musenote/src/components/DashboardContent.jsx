@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaPlus } from 'react-icons/fa';
 import PostPreview from './PostPreview';
+import { Link } from 'react-router-dom';
 import './DashboardContent.css';
 
 const DashboardContent = () => {
@@ -12,9 +13,11 @@ const DashboardContent = () => {
           placeholder="Search lyrics..."
           className="search-bar"
         />
-        <button className="add-button" title="Add New Lyrics">
-          <FaPlus size={18} />
-        </button>
+        <Link to="/create">
+          <button className="add-button" title="Add New Lyrics">
+            <FaPlus size={18} />
+          </button>
+        </Link>
       </div>
 
       <div className="posts-section">
