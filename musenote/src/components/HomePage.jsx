@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Logo from './Logo';
 import DashboardContent from './DashboardContent';
 import { FaUserCircle } from 'react-icons/fa';
@@ -12,8 +13,10 @@ const HomePage = () => {
           <Logo />
         </div>
         <div className="profile-container">
-          <FaUserCircle size={28} color="#fff" />
-          <span className="profile-label">Profile</span>
+          <Link to="/profile" className="profile-link">
+            <FaUserCircle size={28} color="#fff" />
+            <span className="profile-label">Profile</span>
+          </Link>
         </div>
       </div>
       <div className="content">
