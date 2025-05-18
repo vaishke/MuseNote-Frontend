@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Logo from './Logo';
 import './LoginPage.css';
 
@@ -6,8 +7,18 @@ const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    console.log('Login attempt:', username, password);
+  const handleLogin = async () => {
+    try {
+      const loginUser = {
+        userName: username,  
+        password: password
+      };
+      console.log('Login attempt:', loginUser);
+      const response = await axios.post('http://localhost:8085/UsersLogin', loginUser);
+      console.log('Login Successful: ', response.data);
+    } catch (error) {
+      console.error('Login Failed.', error);
+    }
   };
 
   return (

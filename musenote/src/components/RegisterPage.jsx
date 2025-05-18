@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Logo from './Logo';
 import './RegisterPage.css';
 
@@ -8,8 +9,20 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [bio, setBio] = useState('');
 
-  const handleRegister = () => {
-    console.log('Register attempt:', username, email, password, bio);
+  const handleRegister = async () => {
+    try {
+      const newUser = {
+        userName: username,  
+        mail: email,         
+        password: password,
+        bio: bio
+      };
+      console.log('Register attempt:', newUser);
+      const response = await axios.post('http://localhost:8085/addUser', newUser);
+      console.log('Registration Successful: ', response.data);
+    } catch (error) {
+      console.error('Registration Failed.', error);
+    }
   };
 
   return (
