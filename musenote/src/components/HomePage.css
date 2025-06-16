@@ -1,53 +1,53 @@
 .home-page {
-  height: 100vh;
-  background-color: #000;
-  color: white;
-  display: flex;
-  flex-direction: column;
+    height: 100vh;
+    background-color: #000;
+    color: white;
+    display: flex;
+    flex-direction: column;
 }
 
 .top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
 }
 
 .logo-container {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .profile-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 800px;
-  margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 800px;
+    margin-bottom: 10px;
 }
 
 .profile-label {
-  color: white;
-  font-size: 16px;
+    color: white;
+    font-size: 16px;
 }
 
 .content {
-  text-align: center;
-  margin-top: 100px;
+    text-align: center;
+    margin-top: 100px;
 }
 
 .profile-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  text-decoration: none;
-  color: #fff;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
 }
 
 .profile-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
 }

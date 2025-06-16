@@ -1,30 +1,18 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import Logo from './Logo';
 import './LoginPage.css';
-
+import logo from '../assets/logo.png';
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
-    try {
-      const loginUser = {
-        userName: username,  
-        password: password
-      };
-      console.log('Login attempt:', loginUser);
-      const response = await axios.post('http://localhost:8085/UsersLogin', loginUser);
-      console.log('Login Successful: ', response.data);
-    } catch (error) {
-      console.error('Login Failed.', error);
-    }
+  const handleLogin = () => {
+    console.log('Login attempt:', username, password);
   };
 
   return (
     <div className="login-page">
       <div className="logo-section">
-        <Logo />
+         <img src={logo} alt="Logo" className="logo-image" />
       </div>
       <div className="login-form-container">
         <div className="login-box">
