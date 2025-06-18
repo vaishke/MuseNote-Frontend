@@ -16,16 +16,15 @@ const LoginPage = () => {
       };
 
       const response = await axios.post('http://localhost:8085/UsersLogin', loginUser);
-      
-      // If the response contains a token, login was successful
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", response.data.userName); // Optional
+        localStorage.setItem("user", response.data.userName); 
         navigate("/home");
       } else {
         alert("Invalid credentials");
       }
-
+      console.log('Login Successful: ', response.data);
+      navigate('/home');
     } catch (error) {
       console.error('Login Failed.', error);
       alert("Login failed. Please check your credentials.");
