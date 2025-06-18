@@ -9,27 +9,28 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();  
   const handleLogin = async () => {
-      try {
-        const loginUser = {
-          userName: username,
-          password: password
-      };
+  try {
+    const loginUser = {
+      userName: username,
+      password: password
+    };
 
-      const response = await axios.post('http://localhost:8085/UsersLogin', loginUser);
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", response.data.userName); 
-        navigate("/home");
-      } else {
-        alert("Invalid credentials");
-      }
+    const response = await axios.post('http://localhost:8085/UsersLogin', loginUser);
+    
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", response.data.userName); 
       console.log('Login Successful: ', response.data);
       navigate('/home');
-    } catch (error) {
-      console.error('Login Failed.', error);
-      alert("Login failed. Please check your credentials.");
+    } else {
+      alert("Invalid credentials");
     }
-  };
+
+  } catch (error) {
+    console.error('Login Failed.', error);
+    alert("Login failed. Please check your credentials.");
+  }
+};
 
   return (
     <div className="login-page">
