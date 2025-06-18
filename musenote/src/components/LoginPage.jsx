@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import logo from '../assets/logo.png';
+import { useNavigate } from 'react-router-dom';
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const navigate = useNavigate();  
   const handleLogin = () => {
-    console.log('Login attempt:', username, password);
+    navigate('/home');
   };
 
   return (

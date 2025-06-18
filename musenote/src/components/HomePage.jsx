@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from './Logo';
+import logo from '../assets/logo.png';
 import DashboardContent from './DashboardContent';
 import { FaUserCircle } from 'react-icons/fa';
 import './HomePage.css';
@@ -8,9 +8,9 @@ import './HomePage.css';
 const HomePage = () => {
   return (
     <div className="home-page">
-      <div className="top-bar">
-        <div className="logo-container">
-          <Logo />
+      <header className="top-bar-home">
+        <div className="logo-container-home">
+          <img src={logo} alt="Logo" className="logo-img-home" />
         </div>
         <div className="profile-container">
           <Link to="/profile" className="profile-link">
@@ -18,7 +18,7 @@ const HomePage = () => {
             <span className="profile-label">Profile</span>
           </Link>
         </div>
-      </div>
+      </header>
       <div className="content">
         <DashboardContent />
       </div>

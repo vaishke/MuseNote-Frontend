@@ -15,7 +15,6 @@ const LandingPage = () => {
     <div className="landing-page-container">
       <header className="landing-header">
         <img src={logo} alt="Logo" className="logo-img" />
-
         <div className="nav-links">
           <Link to="/login" className="signin-link">
             <UserIcon />
@@ -39,7 +38,11 @@ const LandingPage = () => {
         <div className="about-content">
           <div className="about-text">
             <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus quia enim tempora nostrum, quidem necessitatibus quod provident omnis similique ipsa recusandae unde fuga veritatis sint sapiente fugiat nam perferendis quae?
+              MuseNote is a creative space where music lovers, lyricists and artists come together to share the soul of songs — the lyrics. Whether you're penning your own verses or sharing lines that moved you, MuseNote is your stage.
+
+Post your favorite lyrics, discover new ones, follow lyricists you love, and build a personal collection of lyrical moments that resonate.
+
+Let the words of music speak — one lyric at a time.
             </p>
           </div>
             <img src={bg1} alt="About Visual" className="bgimg_about" />

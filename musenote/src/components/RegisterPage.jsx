@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import './RegisterPage.css';
 
@@ -6,9 +7,10 @@ const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = () => {
-    console.log('Register attempt:', username, email, password);
+   navigate('/login');
   };
 
   return (

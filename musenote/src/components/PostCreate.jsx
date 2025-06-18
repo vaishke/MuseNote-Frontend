@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import Logo from './Logo';
+import logo from '../assets/logo.png';
 import './PostCreate.css';
 
 const PostCreate = () => {
@@ -18,12 +18,12 @@ const PostCreate = () => {
   return (
     <div>
       {/* Header */}
-      <div className="top-bar">
-        <div className="logo-container">
-          <Logo />
+      <div className="top-bar-post">
+        <div className="logo-container-post">
+          <img src={logo} alt="Logo" className="logo-img-post" />
         </div>
         <div className="back-home">
-          <Link to="/" className="home-link">
+          <Link to="/home" className="home-link">
             <FaArrowLeft className="home-icon" />
             <span>Back to Home</span>
           </Link>

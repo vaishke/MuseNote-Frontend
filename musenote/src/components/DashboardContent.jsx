@@ -7,7 +7,7 @@ import './DashboardContent.css';
 const DashboardContent = () => {
   return (
     <div className="dashboard-container">
-      <div className="top-bar">
+      <div className="top-bar-dash">
         <input
           type="text"
           placeholder="Search lyrics..."

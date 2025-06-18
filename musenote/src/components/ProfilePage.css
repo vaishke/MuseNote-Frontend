@@ -1,0 +1,130 @@
+.profile-page {
+    min-height: 100vh;
+    background: linear-gradient(to right, #141e30, #243b55);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 60px 20px;
+}
+
+.profile-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+    padding: 12px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    margin-left: -20px;
+}
+
+.profile-logo {
+    height: 3.5rem;
+}
+
+.back-home-link {
+    position: absolute;
+    left: 90%;
+    transform: translateX(-50%);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 12px;
+    transition: color 0.2s ease;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-home-link:hover {
+    color: #f48fb1;
+}
+
+.profile-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    margin: 100px auto;
+    max-width: 600px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.avatar-section h2 {
+    margin-top: 12px;
+    color: #f48fb1;
+}
+
+.profile-info {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.profile-info label {
+    font-size: 14px;
+    color: #f8c4d7;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.profile-info p {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #eee;
+}
+
+
+/* Editable Fields */
+
+.profile-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background-color: #1e1e2f;
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 16px;
+    outline: none;
+}
+
+.profile-actions {
+    text-align: center;
+}
+
+.edit-btn,
+.save-btn {
+    background: linear-gradient(to right, #ff6f91, #ff8fab);
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+    background: linear-gradient(to right, #ff8fab, #ff94b6);
+    transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+    .profile-card {
+        padding: 20px;
+        margin: 80px 10px;
+    }
+    .profile-logo {
+        height: 3rem;
+    }
+    .back-home-link {
+        font-size: 14px;
+    }
+}
