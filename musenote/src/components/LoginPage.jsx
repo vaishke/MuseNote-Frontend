@@ -2,12 +2,24 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 import logo from '../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();  
-  const handleLogin = () => {
-    navigate('/home');
+  const handleLogin = async () => {
+    try {
+      const loginUser = {
+        userName: username,  
+        password: password
+      };
+      console.log('Login attempt:', loginUser);
+      const response = await axios.post('http://localhost:8085/UsersLogin', loginUser);
+      console.log('Login Successful: ', response.data);
+    } catch (error) {
+      console.error('Login Failed.', error);
+    }
   };
 
   return (
