@@ -25,9 +25,10 @@ function App() {
         <Route path="/profile" element={
           <PrivateRoute><ProfilePage /></PrivateRoute>
         } />
-        <Route path="/postview" element={
+        <Route path="/postview/:postId" element={
           <PrivateRoute><PostView /></PrivateRoute>
         } />
+        
         <Route path="/create" element={
           <PrivateRoute><PostCreate /></PrivateRoute>
         } />
