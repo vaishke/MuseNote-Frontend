@@ -17,6 +17,7 @@ const LoginPage = () => {
       console.log('Login attempt:', loginUser);
       const response = await axios.post('http://localhost:8085/UsersLogin', loginUser);
       console.log('Login Successful: ', response.data);
+      navigate('/home');
     } catch (error) {
       console.error('Login Failed.', error);
     }
