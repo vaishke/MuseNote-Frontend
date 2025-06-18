@@ -31,7 +31,13 @@ const ProfilePage = () => {
 
       {/* Posts Group Container */}
       <div className="posts-box">
-        <h3 className="section-title">My Posts</h3>
+        <div className="posts-header">
+          <h3 className="section-title">My Posts</h3>
+          <Link to="/create">
+            <button className="add-lyrics-btn" title="Add New Lyrics">Create Post</button>
+          </Link>
+        </div>
+
         <div className="posts-column">
           <PostPreview title="Title 1" content="Aasa paasam bandee sesene..." likes={12} />
           <PostPreview title="Title 2" content="Lyricssssssssssssssssssssssss..." likes={45} />
@@ -39,8 +45,6 @@ const ProfilePage = () => {
           <PostPreview title="Title 4" content="Lyricssssssssssssssssssssssss..." likes={45} />
         </div>
       </div>
-
-      <button className="logout-btn">Log Out</button>
     </div>
   );
 };
