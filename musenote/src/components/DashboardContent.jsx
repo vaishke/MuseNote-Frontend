@@ -19,11 +19,10 @@ const DashboardContent = () => {
           </button>
         </Link>
       </div>
-
       <div className="posts-section">
-        <PostPreview 
+        <PostPreview
           title="Title 1"
-          content="Lyricssssssssssssssssssssssss..."
+          content="Aasa paasam bandee sesene..."
           likes={12}
         />
         <PostPreview 

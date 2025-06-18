@@ -19,7 +19,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/post" element={<PostView />} />
+        <Route path="/postview" element={<PostView />} />
         <Route path="/create" element={<PostCreate />} />
       </Routes>
     </Router>

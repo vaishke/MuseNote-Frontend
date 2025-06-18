@@ -4,6 +4,7 @@
     color: white;
     display: flex;
     flex-direction: column;
+    background-image: url(../assets/bg3.jpg);
 }
 
 .top-bar-home {

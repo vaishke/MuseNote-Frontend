@@ -7,7 +7,7 @@ const PostPreview = ({ postid, title, content, likes }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/post/${postid}`);
+    navigate(`/postview`);
   };
 
   return (
