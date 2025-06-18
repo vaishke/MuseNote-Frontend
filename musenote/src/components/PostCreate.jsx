@@ -11,12 +11,41 @@ const PostCreate = () => {
   const [tag2, setTag2] = useState('');
   const [genre, setGenre] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Replace this with actual post logic
-    console.log({ title, content });
-    alert('Post submitted!');
+    const token = localStorage.getItem("token");
+
+    const postData = {
+      title,
+      content,
+      tag1,
+      tag2,
+      genre
+    };
+
+    try {
+      const response = await fetch("http://localhost:8085/addPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(postData)
+      });
+
+      if (response.ok) {
+        alert("Post submitted successfully!");
+        window.location.href = "/home";
+      } else {
+        const err = await response.json();
+        alert(`Error: ${err.message || "Failed to submit post"}`);
+      }
+    } catch (error) {
+      console.error("Post creation failed:", error);
+      alert("An unexpected error occurred.");
+    }
   };
+  
 
   return (
     <div>
