@@ -7,9 +7,9 @@ import HomePage from './components/HomePage';
 import ProfilePage  from './components/ProfilePage';
 import PostView from './components/PostView';
 import PostCreate from './components/PostCreate';
+import PrivateRoute from './components/PrivateRoute';
 
 import './App.css'; 
-
 function App() {
   return (
     <Router>
@@ -17,13 +17,24 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/postview" element={<PostView />} />
-        <Route path="/create" element={<PostCreate />} />
+        
+        {/* protected routes */}
+        <Route path="/home" element={
+          <PrivateRoute><HomePage /></PrivateRoute>
+        } />
+        <Route path="/profile" element={
+          <PrivateRoute><ProfilePage /></PrivateRoute>
+        } />
+        <Route path="/postview" element={
+          <PrivateRoute><PostView /></PrivateRoute>
+        } />
+        <Route path="/create" element={
+          <PrivateRoute><PostCreate /></PrivateRoute>
+        } />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+
