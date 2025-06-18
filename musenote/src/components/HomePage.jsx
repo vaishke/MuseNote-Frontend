@@ -5,15 +5,30 @@ import DashboardContent from './DashboardContent';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
 import './HomePage.css';
+import { jwtDecode } from 'jwt-decode'; 
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
+<<<<<<< HEAD
   const [showDropdown, setShowDropdown] = useState(false);
+=======
+  const [username, setUsername] = useState('');
+>>>>>>> fc8043379dac668d346dc06dd4e7829fe96ca5fa
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUsername(decoded.sub || decoded.userName || decoded.username); 
+      } catch (err) {
+        console.error("Invalid token:", err);
+      }
+    }
+
     const fetchPosts = async () => {
       try {
-        const token = localStorage.getItem("token");
         const response = await axios.get("http://localhost:8085/getAllPosts", {
           headers: {
             Authorization: `Bearer ${token}`
