@@ -61,11 +61,19 @@ const ProfilePage = () => {
             <button className="add-lyrics-btn" title="Add New Lyrics">Create Post</button>
           </Link>
         </div>
-
         <div className="posts-column">
-          {posts.map((post, index) => (
-            <PostPreview key={index} title={post.title} content={post.content} likes={post.likes || 0} />
-          ))}
+          {posts.length === 0 ? (
+            <p className="no-posts-message">No posts yet.</p>
+          ) : (
+            posts.map((post, index) => (
+              <PostPreview
+                key={index}
+                title={post.title}
+                content={post.content}
+                likes={post.likes || 0}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
