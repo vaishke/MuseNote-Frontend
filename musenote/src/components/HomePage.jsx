@@ -5,7 +5,7 @@ import DashboardContent from './DashboardContent';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
 import './HomePage.css';
-import { jwtDecode } from 'jwt-decode'; 
+import { jwtDecode } from 'jwt-decode';
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
@@ -19,7 +19,7 @@ const HomePage = () => {
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUsername(decoded.sub || decoded.userName || decoded.username); 
+        setUsername(decoded.sub || decoded.userName || decoded.username);
       } catch (err) {
         console.error("Invalid token:", err);
       }
@@ -69,11 +69,13 @@ const HomePage = () => {
           />
 
           {showDropdown && (
-            <div className="dropdown-menu">
-              <Link to="/profile" className="dropdown-item" onClick={closeDropdown}>Profile</Link>
-              <button className="dropdown-item logout">Log Out</button> {/* Non-functional */}
-            </div>
-          )}
+  <div className="dropdown-menu">
+    <Link to={`/profile/${username}`} className="dropdown-item" onClick={closeDropdown}>
+      Profile
+    </Link>
+    <button className="dropdown-item logout">Log Out</button>
+  </div>
+)}
         </div>
       </header>
 
