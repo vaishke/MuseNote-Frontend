@@ -124,12 +124,16 @@ const ProfilePage = () => {
             <p className="no-posts-message">No posts yet.</p>
           ) : (
             posts.map((post, index) => (
+              <Link to={`/postview/${post.postId}`} key={post.postId}>
               <PostPreview
                 key={index}
                 title={post.title}
                 content={post.content}
                 likes={post.likes || 0}
+                
               />
+            </Link>
+              
             ))
           )}
         </div>
