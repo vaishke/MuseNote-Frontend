@@ -8,6 +8,7 @@ import './HomePage.css';
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -18,7 +19,7 @@ const HomePage = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        setPosts(response.data); // adjust this if the backend returns something like { posts: [...] }
+        setPosts(response.data);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
         if (error.response?.status === 403) {
@@ -31,20 +32,38 @@ const HomePage = () => {
     fetchPosts();
   }, []);
 
+  const toggleDropdown = () => {
+    setShowDropdown((prev) => !prev);
+  };
+
+  const closeDropdown = () => {
+    setShowDropdown(false);
+  };
+
   return (
-    <div className="home-page">
-      <header className="top-bar-home">
+    <div className="home-page" onClick={closeDropdown}>
+      <header className="top-bar-home" onClick={(e) => e.stopPropagation()}>
         <div className="logo-container-home">
           <img src={logo} alt="Logo" className="logo-img-home" />
         </div>
 
-        <div className="profile-container">
-          <Link to="/profile" className="profile-link">
-            <FaUserCircle size={28} color="#fff" />
-            <span className="profile-label">Profile</span>
-          </Link>
+        <div className="profile-dropdown">
+          <FaUserCircle
+            size={28}
+            color="#fff"
+            className="profile-icon"
+            onClick={toggleDropdown}
+          />
+
+          {showDropdown && (
+            <div className="dropdown-menu">
+              <Link to="/profile" className="dropdown-item" onClick={closeDropdown}>Profile</Link>
+              <button className="dropdown-item logout">Log Out</button> {/* Non-functional */}
+            </div>
+          )}
         </div>
       </header>
+
       <div className="content">
         <DashboardContent posts={posts} />
       </div>

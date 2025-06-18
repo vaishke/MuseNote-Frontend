@@ -41,7 +41,7 @@
     display: block;
     margin-bottom: 6px;
     font-size: 15px;
-    color: #f8c4d7;
+    color: white;
 }
 
 .input-field,
@@ -68,7 +68,7 @@
 .submit-button {
     margin-top: 30px;
     background: linear-gradient(to right, #06daa8, #11e6b4);
-    color: white;
+    color: black;
     border: none;
     padding: 12px 24px;
     font-size: 16px;
@@ -76,7 +76,6 @@
     cursor: pointer;
     font-weight: bold;
     transition: transform 0.2s ease, background 0.3s ease;
-    box-shadow: 0 4px 14px rgba(255, 111, 145, 0.4);
 }
 
 .submit-button:hover {
