@@ -9,11 +9,9 @@ import { jwtDecode } from 'jwt-decode';
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
-<<<<<<< HEAD
   const [showDropdown, setShowDropdown] = useState(false);
-=======
+
   const [username, setUsername] = useState('');
->>>>>>> fc8043379dac668d346dc06dd4e7829fe96ca5fa
 
   useEffect(() => {
     const token = localStorage.getItem("token");
