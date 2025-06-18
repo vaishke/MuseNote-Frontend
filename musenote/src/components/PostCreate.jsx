@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { generatePath, Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import logo from '../assets/logo.png';
 import './PostCreate.css';
@@ -7,13 +7,45 @@ import './PostCreate.css';
 const PostCreate = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [tag1, setTag1] = useState('');
+  const [tag2, setTag2] = useState('');
+  const [genre, setGenre] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Replace this with actual post logic
-    console.log({ title, content });
-    alert('Post submitted!');
+    const token = localStorage.getItem("token");
+
+    const postData = {
+      title,
+      content,
+      tag1,
+      tag2,
+      genre
+    };
+
+    try {
+      const response = await fetch("http://localhost:8085/addPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(postData)
+      });
+
+      if (response.ok) {
+        alert("Post submitted successfully!");
+        window.location.href = "/home";
+      } else {
+        const err = await response.json();
+        alert(`Error: ${err.message || "Failed to submit post"}`);
+      }
+    } catch (error) {
+      console.error("Post creation failed:", error);
+      alert("An unexpected error occurred.");
+    }
   };
+  
 
   return (
     <div>
@@ -53,6 +85,33 @@ const PostCreate = () => {
             onChange={(e) => setContent(e.target.value)}
             required
           ></textarea>
+
+          <label className="tag1">Tag-1</label>
+          <input
+            type="text"
+            className="input-field"
+            value={tag1}
+            onChange={(e) => setTag1(e.target.value)}
+            required
+          />
+
+          <label className="tag2">Tag-2</label>
+          <input
+            type="text"
+            className="input-field"
+            value={tag2}
+            onChange={(e) => setTag2(e.target.value)}
+            required
+          />
+
+          <label className="genre">Genre</label>
+          <input
+            type="text"
+            className="input-field"
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+            required
+          />
 
           <button type="submit" className="submit-button">Post</button>
         </form>

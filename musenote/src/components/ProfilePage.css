@@ -31,7 +31,6 @@ body {
   margin-left: 2rem;
 }
 
-/* New back button style */
 .back-btn {
   padding: 8px 16px;
   background-color: #1a1a1a;
@@ -44,7 +43,7 @@ body {
 
 .back-btn:hover {
   background-color: #333;
-  color:white;
+  color: white;
 }
 
 .profile-top {
@@ -102,22 +101,42 @@ body {
 
 /* Posts Container */
 .posts-box {
-
   background-color: #06daa9ab;
   padding: 30px 20px;
   margin: 40px auto;
   border-radius: 12px;
   max-width: 1000px;
-box-shadow: 0 15px 15px rgb(5, 207, 180);
   border: 1px solid #333;
+}
+
+/* Header with title + add button */
+.posts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .section-title {
   color: white;
   font-size: 30px;
   font-weight: bold;
-  text-align: left;
-  margin-bottom: 20px;
+}
+
+/* Add Button */
+.add-lyrics-btn {
+  padding: 8px 16px;
+  background-color: #1a1a1a;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.add-lyrics-btn:hover {
+  background-color: #333;
+  color: white;
 }
 
 /* Posts displayed vertically */
@@ -136,25 +155,6 @@ box-shadow: 0 15px 15px rgb(5, 207, 180);
   font-size: 14px;
   color: #ddd;
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.03);
-}
-
-.logout-btn {
-  margin: 30px auto;
-  display: block;
-  padding: 10px 30px;
-  font-weight: bold;
-  font-size: 15px;
-  background: linear-gradient(to right, #06daa9ab, #06daa9ab);
-  color: black;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-  transform: scale(1.05);
-  background: linear-gradient(to right, #06daa9, #06daa9);
 }
 
 @media (max-width: 768px) {

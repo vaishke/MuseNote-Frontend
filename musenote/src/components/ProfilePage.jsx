@@ -55,15 +55,19 @@ const ProfilePage = () => {
       </section>
 
       <div className="posts-box">
-        <h3 className="section-title">My Posts</h3>
+        <div className="posts-header">
+          <h3 className="section-title">My Posts</h3>
+          <Link to="/create">
+            <button className="add-lyrics-btn" title="Add New Lyrics">Create Post</button>
+          </Link>
+        </div>
+
         <div className="posts-column">
           {posts.map((post, index) => (
             <PostPreview key={index} title={post.title} content={post.content} likes={post.likes || 0} />
           ))}
         </div>
       </div>
-
-      <button className="logout-btn">Log Out</button>
     </div>
   );
 };
