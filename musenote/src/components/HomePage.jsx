@@ -73,7 +73,16 @@ const HomePage = () => {
     <Link to={`/profile/${username}`} className="dropdown-item" onClick={closeDropdown}>
       Profile
     </Link>
-    <button className="dropdown-item logout">Log Out</button>
+    <button
+      className="dropdown-item logout"
+      onClick={() => {
+        localStorage.removeItem("token"); // Clear the token
+        window.location.href = "/"; // Redirect to landing page
+      }}
+    >
+     Log Out
+    </button>
+
   </div>
 )}
         </div>
