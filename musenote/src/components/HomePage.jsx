@@ -12,6 +12,7 @@ const HomePage = () => {
         <div className="logo-container-home">
           <img src={logo} alt="Logo" className="logo-img-home" />
         </div>
+
         <div className="profile-container">
           <Link to="/profile" className="profile-link">
             <FaUserCircle size={28} color="#fff" />
