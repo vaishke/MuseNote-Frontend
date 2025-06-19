@@ -81,7 +81,7 @@ const HomePage = () => {
         window.location.href = "/"; // Redirect to landing page
       }}
     >
-     Log Out
+    Log Out
     </button>
 
   </div>

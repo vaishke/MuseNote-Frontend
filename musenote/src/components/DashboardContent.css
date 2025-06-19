@@ -1,5 +1,5 @@
 .dashboard-container {
-    width: 80%;
+    width: 80%;  
     margin: 0 auto;
     color: white;
 }
@@ -37,4 +37,52 @@
     flex-direction: column;
     gap: 15px;
     margin-top: 20px;
+}
+
+.post-card {
+    border: 1px solid #444;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    background-color: #1e1e1e;
+}
+
+.username-link {
+    color: #06daa8;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.post-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.like-section {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.like-button {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.like-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.like-count {
+    color: white;
 }
