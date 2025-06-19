@@ -99,7 +99,7 @@ const LandingPage = () => {
       </section>
 
       <footer className="footer">
-        <p>&copy; {new Date().getFullYear()} Linklet. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} MuseNote. All rights reserved.</p>
         <a href="mailto:abc@gmail.com" className="contact-link">Contact Us</a>
       </footer>
     </div>
