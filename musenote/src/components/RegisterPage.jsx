@@ -28,7 +28,33 @@ const handleRegister = async () => {
       alert('Please enter valid email')
       return;
     } 
+    try {
+      const newUser = {
+        userName: username,
+        mail: email,
+        password: password,
+        bio: bio
+      };
 
+      console.log('Register attempt:', newUser);
+      const response = await axios.post('http://localhost:8085/addUser', newUser);
+
+      console.log('Registration Successful: ', response.data);
+
+      alert(`🎉 Welcome ${username}! Check your Gmail for a welcome message.`);
+      navigate('/'); // Redirect to login page
+    } catch (error) {
+      if (
+        error.response?.data?.includes("Duplicate") ||
+        error.response?.status === 500
+      ) {
+        alert("This email is already registered. Please log in.");
+      } else {
+        alert("Registration failed. Please try again later.");
+      }
+      console.error('Registration failed:', error);
+    }
+    /*
     try {
       const newUser = {
         userName: username,
@@ -42,7 +68,7 @@ const handleRegister = async () => {
       navigate('/'); // Redirect to landing page
     } catch (error) {
       console.error('Registration Failed.', error);
-    }
+    }*/
   };
 
   return (
