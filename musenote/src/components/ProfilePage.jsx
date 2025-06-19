@@ -6,6 +6,7 @@ import PostPreview from './PostPreview';
 import logo from '../assets/logo.png';
 import './ProfilePage.css';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -15,34 +16,37 @@ const ProfilePage = () => {
   const [bio, setBio] = useState('');
   const [editingBio, setEditingBio] = useState(false);
   const [newBio, setNewBio] = useState('');
+  const [currentUser, setCurrentUser] = useState('');
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
+    try {
+      const decoded = jwtDecode(token);
+      const current = decoded.sub || decoded.userName || decoded.username;
+      setCurrentUser(current); // Set logged-in user
+    } catch (err) {
+      console.error("Invalid token:", err);
+    }
+
+    const fetchUserData = async () => {
       try {
         // Fetch Posts
         const postsRes = await axios.get(`http://localhost:8085/getPostsByUser/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         setPosts(postsRes.data);
 
         // Fetch User Bio
         const profileRes = await axios.get(`http://localhost:8085/getUserByName/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         setBio(profileRes.data.bio || '');
 
         // Fetch Follower/Following Count
         const followRes = await axios.get(`http://localhost:8085/followCount/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         setFollowers(followRes.data.followers);
         setFollowing(followRes.data.following);
@@ -66,9 +70,7 @@ const ProfilePage = () => {
         username,
         bio: newBio
       }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setBio(newBio);
       setEditingBio(false);
@@ -88,23 +90,26 @@ const ProfilePage = () => {
         <div className="avatar-section">
           <FaUserCircle size={120} className="avatar-icon" />
         </div>
-
         <div className="center-section">
           <h2 className="profile-username">{username}</h2>
           <div className="bio-div">
             {editingBio ? (
-              <>
-                <textarea
-                  className="bio-edit-text"
-                  value={newBio}
-                  onChange={(e) => setNewBio(e.target.value)}
-                />
-                <button onClick={handleSave}><MdSave /></button>
-              </>
+              currentUser === username && (
+                <>
+                  <textarea
+                    className="bio-edit-text"
+                    value={newBio}
+                    onChange={(e) => setNewBio(e.target.value)}
+                  />
+                  <button onClick={handleSave}><MdSave /></button>
+                </>
+              )
             ) : (
               <>
                 <p className="bio">{bio}</p>
-                <button onClick={handleEdit}><MdModeEdit /></button>
+                {currentUser === username && (
+                  <button onClick={handleEdit}><MdModeEdit /></button>
+                )}
               </>
             )}
           </div>
@@ -119,9 +124,11 @@ const ProfilePage = () => {
       <div className="posts-box">
         <div className="posts-header">
           <h3 className="section-title">My Posts</h3>
-          <Link to="/create">
-            <button className="add-lyrics-btn" title="Add New Lyrics">Create Post</button>
-          </Link>
+          {currentUser === username && (
+            <Link to="/create">
+              <button className="add-lyrics-btn" title="Add New Lyrics">Create Post</button>
+            </Link>
+          )}
         </div>
         <div className="posts-column">
           {posts.length === 0 ? (
@@ -129,15 +136,13 @@ const ProfilePage = () => {
           ) : (
             posts.map((post, index) => (
               <Link to={`/postview/${post.postId}`} key={post.postId}>
-              <PostPreview
-                key={index}
-                title={post.title}
-                content={post.content}
-                likes={post.likes || 0}
-                
-              />
-            </Link>
-              
+                <PostPreview
+                  key={index}
+                  title={post.title}
+                  content={post.content}
+                  likes={post.likes || 0}
+                />
+              </Link>
             ))
           )}
         </div>
