@@ -9,10 +9,10 @@ const PostView = () => {
   const params = useParams();
   const { postId } = params;
   console.log("Params:", params);
-
+  
   
   const [post, setPost] = useState(null);
-  console.log("postId from URL is:", postId);
+  
 
  useEffect(() => {
   const token = localStorage.getItem('token'); // Assuming you store JWT in localStorage
@@ -60,7 +60,7 @@ const PostView = () => {
           </Link>
         </div>
       </div>
-
+      
       {/* Post Content Section */}
       <div className="post-view">
         <div className="first-black">
@@ -68,7 +68,8 @@ const PostView = () => {
 
           <div className="post-meta">
             <span className="username">
-              <IoIosContact /> Posted by: @{post.userreg?.name || 'Unknown'}
+            
+              <IoIosContact /> Posted by: @{post.userreg?.userName || 'Unknown'}
             </span>
             <span className="likes">
               <FaHeart className="heart-icon" /> {post.likes || 0} likes
