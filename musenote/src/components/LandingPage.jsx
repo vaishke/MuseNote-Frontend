@@ -70,11 +70,10 @@ const LandingPage = () => {
             <button onClick={handleLogin} className="login-button">
               Login
             </button>
-            <p style={{ marginTop: '20px' }}>
-              Don’t have an account?{' '}
-              <Link to="/register" style={{ color: '#4c8ef7', textDecoration: 'underline' }}>
-                Create an Account
-              </Link>
+
+            <p className="login-link-text">
+              Don’t have an account?
+              <Link to="/register" className="login-link-span"> Create new account</Link>
             </p>
           </div>
         </div>
