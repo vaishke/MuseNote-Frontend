@@ -29,3 +29,31 @@
 .clickable {
     cursor: pointer;
 }
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.post-userid {
+  font-size: 14px;
+  color: #81d4fa;
+  cursor: pointer;
+}
+
+.post-userid:hover {
+  text-decoration: underline;
+}
+
+.likes {
+  font-size: 14px;
+  color: #f06292;
+  display: flex;
+  align-items: center;
+}
+
+.heart-icon {
+  margin-right: 4px;
+}
