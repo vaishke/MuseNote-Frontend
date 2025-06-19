@@ -133,3 +133,24 @@
     border: none;
     width: 100%;
 }
+
+.likes-button {
+    background: none;
+    border: none;
+    color: crimson;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+
+.likes-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.heart-icon {
+    color: crimson;
+}

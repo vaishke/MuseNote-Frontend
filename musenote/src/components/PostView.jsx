@@ -6,41 +6,58 @@ import './PostView.css';
 import logo from '../assets/logo.png';
 
 const PostView = () => {
-  const params = useParams();
-  const { postId } = params;
-  console.log("Params:", params);
-  
-  
+  const { postId } = useParams();
   const [post, setPost] = useState(null);
-  
+  const [liked, setLiked] = useState(false); // Track if user liked this post
 
-useEffect(() => {
-  const token = localStorage.getItem('token'); // Assuming you store JWT in localStorage
-  console.log("Fetching post with ID:", postId);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
 
-  fetch(`http://localhost:8085/getPostById/${postId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch post');
+    // Fetch post details
+    fetch(`http://localhost:8085/getPostById/${postId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch post');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setPost(data);
+      })
+      .catch(error => {
+        console.error('Error fetching post:', error);
+      });
+  }, [postId]);
+
+  // Handle Like button click
+  const handleLike = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch(`http://localhost:8085/likePost/${postId}`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        setPost(prev => ({ ...prev, likes: prev.likes + 1 }));
+        setLiked(true);
+      } else {
+        const errMsg = await response.text();
+        alert(errMsg || "Failed to like post.");
       }
-      return response.json();
-    })
-    .then(data => {
-      console.log("Fetched post data:", data);
-      setPost(data);
-    })
-    .catch(error => {
-      console.error('Error fetching post:', error);
-    });
-}, [postId]);
-
+    } catch (err) {
+      console.error("Error liking post:", err);
+    }
+  };
 
   if (!post) {
     return <div className="loading">Loading post...</div>;
@@ -48,7 +65,7 @@ useEffect(() => {
 
   return (
     <div>
-      {/* Header Section */}
+      {/* Header */}
       <div className="top-bar-postview">
         <div className="logo-container">
           <img src={logo} alt="Logo" className="logo-img-home" />
@@ -60,24 +77,32 @@ useEffect(() => {
           </Link>
         </div>
       </div>
-      
-      {/* Post Content Section */}
+
+      {/* Post Content */}
       <div className="post-view">
         <div className="first-black">
           <h1 className="post-title">{post.title}</h1>
 
           <div className="post-meta">
             <span className="username">
-            
               <IoIosContact /> Posted by: @{post.userreg?.userName || 'Unknown'}
             </span>
-            <span className="likes">
-              <FaHeart className="heart-icon" /> {post.likes || 0} likes
-            </span>
+
+            <button
+              className="likes-button"
+              onClick={handleLike}
+              disabled={liked}
+              title={liked ? "Already liked" : "Click to like"}
+            >
+              <FaHeart className="heart-icon" />
+              {post.likes} {post.likes === 1 ? 'like' : 'likes'}
+            </button>
           </div>
 
           <div className="post-tags">
-            <span>{post.genre}</span> <span>{post.tag1}</span> <span>{post.tag2}</span>
+            <span>{post.genre}</span>
+            <span>{post.tag1}</span>
+            <span>{post.tag2}</span>
           </div>
         </div>
 
