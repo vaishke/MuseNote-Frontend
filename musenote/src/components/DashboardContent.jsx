@@ -99,8 +99,8 @@ const PostCard = ({ post }) => {
 
   return (
     <div className="post-card">
-      <Link to={`/profile/${post.userreg?.name}`} className="username-link">
-        @{post.userreg?.name}
+      <Link to={`/profile/${post.userreg?.userName}`} className="username-link">
+        @{post.userreg?.userName}
       </Link>
 
       <Link to={`/postview/${post.postId}`} className="post-link">

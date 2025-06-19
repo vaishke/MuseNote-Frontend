@@ -14,7 +14,7 @@ const PostView = () => {
   const [post, setPost] = useState(null);
   
 
- useEffect(() => {
+useEffect(() => {
   const token = localStorage.getItem('token'); // Assuming you store JWT in localStorage
   console.log("Fetching post with ID:", postId);
 
