@@ -228,3 +228,23 @@ body {
     padding: 8px;
     resize: none;
 }
+
+.follow-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.follow-btn.follow {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.follow-btn.unfollow {
+  background-color: #f44336;
+  color: white;
+}

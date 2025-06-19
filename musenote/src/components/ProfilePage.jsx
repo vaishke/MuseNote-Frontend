@@ -17,7 +17,54 @@ const ProfilePage = () => {
   const [editingBio, setEditingBio] = useState(false);
   const [newBio, setNewBio] = useState('');
   const [currentUser, setCurrentUser] = useState('');
+  const [isFollowing, setIsFollowing] = useState(false);
 
+  useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const decoded = jwtDecode(token);
+      const current = decoded.sub || decoded.userName || decoded.username;
+      setCurrentUser(current); // update state immediately
+
+      const fetchUserData = async () => {
+        try {
+          // Fetch Posts
+          const postsRes = await axios.get(`http://localhost:8085/getPostsByUser/${username}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setPosts(postsRes.data);
+
+          // Fetch Bio
+          const profileRes = await axios.get(`http://localhost:8085/getUserByName/${username}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setBio(profileRes.data.bio || '');
+
+          // Fetch Count
+          const followRes = await axios.get(`http://localhost:8085/followCount/${username}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setFollowers(followRes.data.followers);
+          setFollowing(followRes.data.following);
+
+          // ✅ Check follow status *after* currentUser is set
+          if (current && current !== username) {
+            const followStatusRes = await axios.get(`http://localhost:8085/isFollowing/${current}/${username}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setIsFollowing(followStatusRes.data.following);
+          }
+
+        } catch (err) {
+          console.error("Error fetching profile data:", err);
+        }
+      };
+
+      fetchUserData();
+    }, [username]);
+
+    /*
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -53,10 +100,21 @@ const ProfilePage = () => {
       } catch (err) {
         console.error("Error fetching data:", err);
       }
+      // Check if logged-in user is following this profile
+      if (currentUser && currentUser !== username) {
+        try {
+          const followStatusRes = await axios.get(`http://localhost:8085/isFollowing/${currentUser}/${username}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setIsFollowing(followStatusRes.data.following);
+        } catch (err) {
+          console.error("Error checking follow status:", err);
+        }
+      }
     };
 
     fetchUserData();
-  }, [username]);
+  }, [username]);*/
 
   const handleEdit = () => {
     setEditingBio(true);
@@ -112,6 +170,31 @@ const ProfilePage = () => {
                 )}
               </>
             )}
+            {currentUser && currentUser !== username && (
+              <button
+                className={`follow-btn ${isFollowing ? 'unfollow' : 'follow'}`}
+                onClick={async () => {
+                  try {
+                    const token = localStorage.getItem("token");
+                    const endpoint = isFollowing ? "/unfollow" : "/follow";
+                    await axios.post(`http://localhost:8085${endpoint}`, {
+                      follower: currentUser,
+                      followee: username
+                    }, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    setIsFollowing(!isFollowing);
+                    setFollowers(prev => isFollowing ? prev - 1 : prev + 1);
+                  } catch (err) {
+                    console.error("Follow/unfollow failed:", err);
+                  }
+                }}
+              >
+                {isFollowing ? "Unfollow" : "Follow"}
+              </button>
+            )}
+
           </div>
         </div>
 
