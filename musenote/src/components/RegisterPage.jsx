@@ -10,12 +10,24 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [bio, setBio] = useState('');
   const navigate = useNavigate();
+  const [emailError, setEmailError] = useState('');
 
-  const handleRegister = async () => {
+const validateEmail = (email) => {
+  const isValid = /^[^\s@]+@gmail\.com$/.test(email);
+  setEmailError(isValid ? '' : 'Please enter a valid Gmail address (e.g., yourname@gmail.com).');
+  return isValid;
+};
+
+const handleRegister = async () => {
     if (!username || !email || !password) {
       alert('Please fill in all required fields.');
       return;
     }
+
+    if (!validateEmail(email)) {
+      alert('Please enter valid email')
+      return;
+    } 
 
     try {
       const newUser = {
