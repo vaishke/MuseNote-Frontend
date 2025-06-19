@@ -31,7 +31,11 @@ const ProfilePage = () => {
         setPosts(postsRes.data);
 
         // Fetch User Bio
-        const profileRes = await axios.get(`http://localhost:8085/getUserByName/${username}`);
+        const profileRes = await axios.get(`http://localhost:8085/getUserByName/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setBio(profileRes.data.bio || '');
 
         // Fetch Follower/Following Count
@@ -99,7 +103,7 @@ const ProfilePage = () => {
               </>
             ) : (
               <>
-                <p className="bio">{bio || "Just a melody in making 🎵"}</p>
+                <p className="bio">{bio}</p>
                 <button onClick={handleEdit}><MdModeEdit /></button>
               </>
             )}
