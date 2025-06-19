@@ -14,6 +14,7 @@ html,
     justify-content: center;
     height: 100vh;
     background-color: #000;
+    flex-direction: column;
 }
 
 .logosection-reg {
@@ -38,7 +39,7 @@ html,
 }
 
 .register-form-container {
-    margin-top: 50px;
+    margin-top: 80px;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -57,7 +58,7 @@ html,
 .register-input {
     width: 100%;
     padding: 12px;
-    margin: 12px -10px;
+    margin: 12px 0;
     border: none;
     border-radius: 8px;
     background-color: #26262f;
@@ -75,8 +76,26 @@ html,
     border-radius: 8px;
     cursor: pointer;
     margin-top: 12px;
+    transition: background-color 0.3s ease;
 }
 
 .register-button:hover {
     background-color: #3b75d4;
+}
+
+.register-button:disabled {
+    background-color: #9bbcf5;
+    cursor: not-allowed;
+}
+
+.register-link-text {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #000;
+}
+
+.register-link-span {
+    color: #4c8ef7;
+    cursor: pointer;
+    text-decoration: underline;
 }

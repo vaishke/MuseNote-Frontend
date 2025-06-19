@@ -8,26 +8,30 @@ const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
   const [bio, setBio] = useState('');
+  const navigate = useNavigate();
+
   const handleRegister = async () => {
+    if (!username || !email || !password) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
     try {
       const newUser = {
-        userName: username,  
-        mail: email,         
+        userName: username,
+        mail: email,
         password: password,
         bio: bio
       };
       console.log('Register attempt:', newUser);
       const response = await axios.post('http://localhost:8085/addUser', newUser);
       console.log('Registration Successful: ', response.data);
-      navigate('/login');
-      
+      navigate('/'); // Redirect to landing page
     } catch (error) {
-      console.error('Registration Failed.', error);
-    }
+      console.error('Registration Failed.', error);
+    }
   };
-  
 
   return (
     <div className="register-page">
@@ -58,9 +62,30 @@ const RegisterPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="register-input"
           />
-          <button onClick={handleRegister} className="register-button">
+          {/* Optional bio field — can remove if not needed */}
+          {/* <input
+            type="text"
+            placeholder="Bio (optional)"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            className="register-input"
+          /> */}
+          <button
+            onClick={handleRegister}
+            className="register-button"
+            disabled={!username || !email || !password}
+          >
             Register
           </button>
+          <p className="register-link-text">
+            Already have an account?{' '}
+            <span
+              className="register-link-span"
+              onClick={() => navigate('/')}
+            >
+              Login
+            </span>
+          </p>
         </div>
       </div>
     </div>

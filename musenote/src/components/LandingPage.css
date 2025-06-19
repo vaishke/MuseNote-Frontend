@@ -73,20 +73,20 @@ html,
     height: 80vh;
     display: block;
     object-fit: cover;
-    object-position: right; /* shift image to right */
+    object-position: center; 
 }
 
 .login-box-wrapper {
     position: absolute;
-    top: 8rem;
+    top: 10rem;
     right: 1rem;
     z-index: 999;
 }
 
 .login-box {
     color: #fff;
-    background-color: rgba(50, 50, 50, 0.9); /* transparent grey */
-    padding: 50px;
+    background-color: rgba(50, 50, 50, 0.9); 
+    padding: 80px;
     border-radius: 16px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     width: 350px;
