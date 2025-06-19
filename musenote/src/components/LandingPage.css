@@ -57,8 +57,6 @@ html,
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-.user-icon,
-.sign-up,
 .about-icon {
     margin-right: 8px;
     font-size: 1.2rem;
@@ -67,18 +65,63 @@ html,
 
 .background-image {
     margin-top: 5rem;
+    position: relative;
 }
 
 .bgimg {
     width: 100%;
-    height: auto;
+    height: 80vh;
     display: block;
     object-fit: cover;
+    object-position: right; /* shift image to right */
+}
+
+.login-box-wrapper {
+    position: absolute;
+    top: 8rem;
+    right: 1rem;
+    z-index: 999;
+}
+
+.login-box {
+    color: #fff;
+    background-color: rgba(50, 50, 50, 0.9); /* transparent grey */
+    padding: 50px;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: none;
+    border-radius: 8px;
+    background-color: #26262f;
+    color: #fff;
+    font-size: 16px;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4c8ef7;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+.login-button:hover {
+    background-color: #3b75d4;
 }
 
 .about-section {
     padding: 20px 60px;
-    /* background-color: #07d49373; */
     background-color: #000;
     color: #fcfafa;
     text-align: center;
@@ -103,10 +146,6 @@ html,
     flex: 1;
     font-size: 1.1rem;
     line-height: 1.6;
-}
-
-.bgimg_about {
-    width: 50rem;
 }
 
 .bgimg_about {
