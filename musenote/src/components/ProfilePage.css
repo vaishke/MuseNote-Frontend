@@ -77,7 +77,8 @@ body {
 
 .bio {
     color: #aaa;
-    font-size: 14px;
+    font-size: 20px;
+    font-style: italic;
 }
 
 .right-section {
@@ -211,4 +212,19 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+}
+
+.bio-div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 45%;
+}
+
+.bio-edit-text {
+    width: 300px;
+    height: 60px;
+    font-size: 14px;
+    padding: 8px;
+    resize: none;
 }

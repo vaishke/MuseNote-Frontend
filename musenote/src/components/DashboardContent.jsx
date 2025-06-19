@@ -19,21 +19,23 @@ const DashboardContent = ({ posts }) => {
           </button>
         </Link>
       </div>
-
       <div className="posts-section">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostPreview
-              key={post.id} // assuming each post has a unique id
-              title={post.title}
-              content={post.content}
-              likes={post.likes || 0} // fallback if likes isn't available
-            />
+            <Link to={`/postview/${post.postId}`} key={post.postId}>
+              <PostPreview
+                title={post.title}
+                content={post.content}
+                likes={post.likes || 0}
+              />
+            </Link>
           ))
         ) : (
           <p>No posts available</p>
         )}
       </div>
+
+     
     </div>
   );
 };

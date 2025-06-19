@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
+import { MdModeEdit, MdSave } from "react-icons/md";
 import PostPreview from './PostPreview';
 import logo from '../assets/logo.png';
 import './ProfilePage.css';
@@ -11,25 +12,70 @@ const ProfilePage = () => {
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
+  const [bio, setBio] = useState('');
+  const [editingBio, setEditingBio] = useState(false);
+  const [newBio, setNewBio] = useState('');
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       try {
-        // Get user posts
-        const postsRes = await axios.get(`http://localhost:8085/getPostsByUser/${username}`);
+        // Fetch Posts
+        const postsRes = await axios.get(`http://localhost:8085/getPostsByUser/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setPosts(postsRes.data);
 
-        // Get follower & following count
-        const followRes = await axios.get(`http://localhost:8085/followCount/${username}`);
+        // Fetch User Bio
+        const profileRes = await axios.get(`http://localhost:8085/getUserByName/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setBio(profileRes.data.bio || '');
+
+        // Fetch Follower/Following Count
+        const followRes = await axios.get(`http://localhost:8085/followCount/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setFollowers(followRes.data.followers);
         setFollowing(followRes.data.following);
       } catch (err) {
-        console.error('Error fetching profile data:', err);
+        console.error("Error fetching data:", err);
       }
     };
 
     fetchUserData();
   }, [username]);
+
+  const handleEdit = () => {
+    setEditingBio(true);
+    setNewBio(bio);
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put("http://localhost:8085/updateBio", {
+        username,
+        bio: newBio
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      setBio(newBio);
+      setEditingBio(false);
+    } catch (err) {
+      console.error("Error updating bio:", err);
+    }
+  };
 
   return (
     <div className="profile-page">
@@ -45,7 +91,23 @@ const ProfilePage = () => {
 
         <div className="center-section">
           <h2 className="profile-username">{username}</h2>
-          <p className="bio">Just a melody in the making 🎵</p>
+          <div className="bio-div">
+            {editingBio ? (
+              <>
+                <textarea
+                  className="bio-edit-text"
+                  value={newBio}
+                  onChange={(e) => setNewBio(e.target.value)}
+                />
+                <button onClick={handleSave}><MdSave /></button>
+              </>
+            ) : (
+              <>
+                <p className="bio">{bio}</p>
+                <button onClick={handleEdit}><MdModeEdit /></button>
+              </>
+            )}
+          </div>
         </div>
 
         <div className="right-section">
@@ -66,12 +128,16 @@ const ProfilePage = () => {
             <p className="no-posts-message">No posts yet.</p>
           ) : (
             posts.map((post, index) => (
+              <Link to={`/postview/${post.postId}`} key={post.postId}>
               <PostPreview
                 key={index}
                 title={post.title}
                 content={post.content}
                 likes={post.likes || 0}
+                
               />
+            </Link>
+              
             ))
           )}
         </div>

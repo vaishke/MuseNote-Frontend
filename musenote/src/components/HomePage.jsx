@@ -5,12 +5,26 @@ import DashboardContent from './DashboardContent';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
 import './HomePage.css';
+import { jwtDecode } from 'jwt-decode';
 
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const [username, setUsername] = useState('');
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUsername(decoded.sub || decoded.userName || decoded.username);
+      } catch (err) {
+        console.error("Invalid token:", err);
+      }
+    }
+
     const fetchPosts = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -56,11 +70,22 @@ const HomePage = () => {
           />
 
           {showDropdown && (
-            <div className="dropdown-menu">
-              <Link to="/profile" className="dropdown-item" onClick={closeDropdown}>Profile</Link>
-              <button className="dropdown-item logout">Log Out</button> {/* Non-functional */}
-            </div>
-          )}
+  <div className="dropdown-menu">
+    <Link to={`/profile/${username}`} className="dropdown-item" onClick={closeDropdown}>
+      Profile
+    </Link>
+    <button
+      className="dropdown-item logout"
+      onClick={() => {
+        localStorage.removeItem("token"); // Clear the token
+        window.location.href = "/"; // Redirect to landing page
+      }}
+    >
+     Log Out
+    </button>
+
+  </div>
+)}
         </div>
       </header>
 

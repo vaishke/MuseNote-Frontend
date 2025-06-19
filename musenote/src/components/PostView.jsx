@@ -1,65 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaArrowLeft, FaHeart } from 'react-icons/fa';
-import Logo from './Logo';
+import { IoIosContact } from "react-icons/io";
 import './PostView.css';
 import logo from '../assets/logo.png';
-import { IoIosContact } from "react-icons/io";
 
 const PostView = () => {
-  const { postId } = useParams();
+  const params = useParams();
+  const { postId } = params;
+  console.log("Params:", params);
 
-  // Mock data - replace with real fetch later
-  const post = {
-    title: 'Sample Post Title',
-    content: `Aasa paasam bandee sesene Saaage kaalam aade aatele Teeraa \n teeram serelogaane Ye teerouno Seruvaina sedu dooraale Todoutune eede vainaale
-Needo kaado telelogaane yedetouno
-Aatu potu gunde maatullona saagenaa
-Yelelelelo kallolam ee lokamlo
-Lolo lo lotullo ye leelo
-Eda kolanullo
-Nindu punnamela mabbu kammukochhi
-Simma seekatalli potunte
-Nee gamyam gandaragolam
-Dikku tochakunda talladilli potu
-Pallatilli poyi neevunte
-Teerenaa nee aaraatam
-Ye hetuvu nuditi raatalni
-Maarchindo nisitangaa telisedelaa
-Repetouno telaalante
-Nee uniki undaaligaa
-Oo aatu potu gunde maatullona
-Saagenaaa
-Aasa paasam bandee sesele
-Saage kaalam aade taatele
-Teeraa teeram serelogaane ye teerouno
-Ye jaadalo yemunnado
-Kreeneedalaa vidhi vechnnado
-Ye malupulo yem daagunnado
-Neevugaa telchuko nee saililo
-Siggu mullu gappi ranguleenutunna
-Lokamante pedda naatakame
-Teliyakane saage kadhanam
-Neevu pettukunna nammakaalu anni
-Pakka daari patti potunte
-Kanchiki nee kathale dooram
-Nee setullo undi setallo supinchi
-Eduregi saagaaliga
-Repetouno telaalante nuveduru sudaaligaa
-Oo aatu potu gunde maatullona
-Untunnaa
-Reraa naane naane naanenaa
-Reraa naane naane naanenaa
-Taara taara taareraarere taaraaraa
-Reraa naane naane naanenaa
-Reraa naane naane naanenaa
-Taara taara taareraarere taaraaraa`,
-    username: 'lyric_master',
-    likes: 42,
-    genre: 'Pop',
-    tag1: '#love',
-    tag2: '#dreams',
-  };
+  
+  const [post, setPost] = useState(null);
+  console.log("postId from URL is:", postId);
+
+ useEffect(() => {
+  const token = localStorage.getItem('token'); // Assuming you store JWT in localStorage
+  console.log("Fetching post with ID:", postId);
+
+  fetch(`http://localhost:8085/getPostById/${postId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch post');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Fetched post data:", data);
+      setPost(data);
+    })
+    .catch(error => {
+      console.error('Error fetching post:', error);
+    });
+}, [postId]);
+
+
+  if (!post) {
+    return <div className="loading">Loading post...</div>;
+  }
 
   return (
     <div>
@@ -78,30 +63,31 @@ Taara taara taareraarere taaraaraa`,
 
       {/* Post Content Section */}
       <div className="post-view">
-        <div className = "first-black">
+        <div className="first-black">
           <h1 className="post-title">{post.title}</h1>
 
           <div className="post-meta">
-            <span className="username"><IoIosContact />Posted by: @{post.username}</span>
+            <span className="username">
+              <IoIosContact /> Posted by: @{post.userreg?.name || 'Unknown'}
+            </span>
             <span className="likes">
-              <FaHeart className="heart-icon" /> {post.likes} likes
+              <FaHeart className="heart-icon" /> {post.likes || 0} likes
             </span>
           </div>
-        
+
           <div className="post-tags">
             <span>{post.genre}</span> <span>{post.tag1}</span> <span>{post.tag2}</span>
           </div>
         </div>
 
         <div className="post-body">
-          <div className = "lyric">
+          <div className="lyric">
             {post.content.split('\n').map((line, index) => (
               <p key={index}>{line}</p>
             ))}
           </div>
-  </div>
-</div>
-
+        </div>
+      </div>
     </div>
   );
 };
