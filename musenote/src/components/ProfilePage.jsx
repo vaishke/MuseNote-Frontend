@@ -25,6 +25,9 @@ const ProfilePage = () => {
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
+
   const menuRef = useRef();
 
   useEffect(() => {
@@ -100,9 +103,6 @@ const ProfilePage = () => {
   };
 
   const handleDelete = async (postId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
-    if (!confirmDelete) return;
-
     try {
       const token = localStorage.getItem("token");
       await axios.delete(`http://localhost:8085/deletePost/${postId}`, {
@@ -145,6 +145,28 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <ToastContainer />
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Confirm Delete</h3>
+            <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+            <div className="modal-buttons">
+              <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>Cancel</button>
+              <button
+                className="confirm-btn"
+                onClick={() => {
+                  handleDelete(postToDelete);
+                  setShowDeleteModal(false);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <header className="profile-header">
         <Link to="/home" className="profile-logo">
@@ -288,7 +310,10 @@ const ProfilePage = () => {
                 {currentUser === username && (
                   <button
                     className="delete-btn"
-                    onClick={() => handleDelete(post.postId)}
+                    onClick={() => {
+                      setPostToDelete(post.postId);
+                      setShowDeleteModal(true);
+                    }}
                     title="Delete this post"
                   >
                     <MdDelete />
