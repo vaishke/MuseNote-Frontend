@@ -6,11 +6,10 @@ import axios from 'axios';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [bio, setBio] = useState('');
-  const navigate = useNavigate();
   const [emailError, setEmailError] = useState('');
+  const navigate = useNavigate();
 
 const validateEmail = (email) => {
   const isValid = /^[^\s@]+@gmail\.com$/.test(email);
@@ -65,7 +64,7 @@ const handleRegister = async () => {
       console.log('Register attempt:', newUser);
       const response = await axios.post('http://localhost:8085/addUser', newUser);
       console.log('Registration Successful: ', response.data);
-      navigate('/'); // Redirect to landing page
+      navigate('/');
     } catch (error) {
       console.error('Registration Failed.', error);
     }*/
@@ -88,11 +87,16 @@ const handleRegister = async () => {
           />
           <input
             type="email"
-            placeholder="Email ID"
+            placeholder="Email ID (only Gmail)"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              validateEmail(e.target.value);
+            }}
             className="register-input"
           />
+          {emailError && <p className="error-text">{emailError}</p>}
+
           <input
             type="password"
             placeholder="Password"
@@ -100,14 +104,6 @@ const handleRegister = async () => {
             onChange={(e) => setPassword(e.target.value)}
             className="register-input"
           />
-          {/* Optional bio field — can remove if not needed */}
-          {/* <input
-            type="text"
-            placeholder="Bio (optional)"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            className="register-input"
-          /> */}
           <button
             onClick={handleRegister}
             className="register-button"
