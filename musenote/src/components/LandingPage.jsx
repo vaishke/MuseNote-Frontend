@@ -100,7 +100,15 @@ const LandingPage = () => {
 
       <footer className="footer">
         <p>&copy; {new Date().getFullYear()} MuseNote. All rights reserved.</p>
-        <a href="mailto:abc@gmail.com" className="contact-link">Contact Us</a>
+        <a
+        href="mailto:srinikhilamaravajjala@gmail.com?subject=MuseNote%20Inquiry&body=Hi%20MuseNote%20Team,%0D%0A%0D%0AI would like to..."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="contact-link"
+      >
+        Contact Us
+      </a>
+
       </footer>
     </div>
   );
