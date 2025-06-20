@@ -19,19 +19,36 @@ const PostCreate = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
+  e.preventDefault();
+  const token = localStorage.getItem("token");
 
-    const postData = {
-      title,
-      content,
-      tag1,
-      tag2,
-      genre
-    };
+  const postData = {
+    title,
+    content,
+    tag1,
+    tag2,
+    genre
+  };
 
-    try {
-      const response = await fetch("http://localhost:8085/addPost", {
+  try {
+    let response;
+
+    if (file) {
+      // If audio file is present, use /addPostWithAudio
+      const formData = new FormData();
+      formData.append("post", JSON.stringify(postData));
+      formData.append("file", file);
+
+      response = await fetch("http://localhost:8085/addPostWithAudio", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+    } else {
+      // If no audio, use /addPost
+      response = await fetch("http://localhost:8085/addPost", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,20 +56,22 @@ const PostCreate = () => {
         },
         body: JSON.stringify(postData)
       });
-
-      if (response.ok) {
-        alert("Post submitted successfully!");
-        fileInputRef.current.value = "";
-        window.location.href = "/home";
-      } else {
-        const err = await response.json();
-        alert(`Error: ${err.message || "Failed to submit post"}`);
-      }
-    } catch (error) {
-      console.error("Post creation failed:", error);
-      alert("An unexpected error occurred.");
     }
-  };
+
+    if (response.ok) {
+      alert("Post submitted successfully!");
+      fileInputRef.current.value = "";
+      window.location.href = "/home";
+    } else {
+      const err = await response.json();
+      alert(`Error: ${err.message || "Failed to submit post"}`);
+    }
+  } catch (error) {
+    console.error("Post creation failed:", error);
+    alert("An unexpected error occurred.");
+  }
+};
+
 
   return (
     <div>
