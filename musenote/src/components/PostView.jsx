@@ -98,11 +98,11 @@ const PostView = () => {
               {post.likes} {post.likes === 1 ? 'like' : 'likes'}
             </button>
           </div>
-
+          <span className="genre">{post.genre}</span>
           <div className="post-tags">
-            <span>{post.genre}</span>
+           
             <span>{post.tag1}</span>
-            <span>{post.tag2}</span>
+            <span style={{ marginLeft: '12px' }}>{post.tag2}</span>
           </div>
         </div>
 
