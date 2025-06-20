@@ -79,6 +79,7 @@ body {
     color: #aaa;
     font-size: 20px;
     font-style: italic;
+    padding-left: 19%;
 }
 
 .right-section {
@@ -105,27 +106,28 @@ body {
 
 .posts-box {
     background-color: #06daa9ab;
-    padding: 30px 20px;
+    padding: 3px 20px;
     margin: 40px auto;
     border-radius: 12px;
     max-width: 1000px;
     border: 1px solid #333;
 }
 
-
-/* Header with title + add button */
-
 .posts-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 4%;
+    padding-top: -40%;
+    padding-bottom: -90%;
 }
 
 .section-title {
     color: white;
     font-size: 30px;
+    margin-left: 45%;
     font-weight: bold;
+    margin-top: 2%;
+    margin-bottom: -0.5%;
 }
 
 
@@ -139,6 +141,7 @@ body {
     border-radius: 6px;
     font-weight: bold;
     transition: background 0.3s ease;
+    margin-bottom: -1.8%;
 }
 
 .add-lyrics-btn:hover {
@@ -154,9 +157,6 @@ body {
     flex-direction: column;
     gap: 16px;
 }
-
-
-/* Individual Post Styling */
 
 .post-tile {
     background-color: #1a1a1a;
@@ -257,24 +257,24 @@ body {
 }
 
 .follow-list {
-  background: #f0f0f0;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1rem;
-  max-width: 400px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem;
+    max-width: 400px;
 }
 
 .follow-list ul {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 .follow-list li {
-  margin: 0.5rem 0;
+    margin: 0.5rem 0;
 }
 
 .follow-list a {
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
 }
