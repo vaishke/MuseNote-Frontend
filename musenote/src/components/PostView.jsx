@@ -68,8 +68,8 @@ const PostView = () => {
       {/* Header */}
       <div className="top-bar-postview">
         <div className="logo-container">
-           <Link to="/home" className='logo-img-post'>
-          <img src={logo} alt="Logo" className="logo-img-home" />
+          <Link to="/home" className='logo-img-post'>
+            <img src={logo} alt="Logo" className="logo-img-home" />
           </Link>
         </div>
         <div className="back-home">
@@ -102,21 +102,20 @@ const PostView = () => {
           </div>
           <span className="genre">{post.genre}</span>
           <div className="post-tags">
-           
+
             <span>{post.tag1}</span>
             <span style={{ marginLeft: '12px' }}>{post.tag2}</span>
           </div>
           {post.audioFileName && (
-            <div className="audio-player" style={{ marginTop: '20px' }}>
-              <h4>Audio Preview</h4>
+            <div className="audio-player">
               <audio controls controlsList="nodownload" style={{ width: '100%' }}>
                 <source src={`http://localhost:8085/audio/${post.audioFileName}`} type="audio/mpeg" />
                 Your browser does not support the audio element.
               </audio>
             </div>
           )}
-          
-          
+
+
 
         </div>
 
