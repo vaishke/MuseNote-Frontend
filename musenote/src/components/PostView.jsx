@@ -87,7 +87,7 @@ const PostView = () => {
 
           <div className="post-meta">
             <span className="username">
-              <IoIosContact /> Posted by: @{post.userreg?.userName || 'Unknown'}
+              <IoIosContact /> Posted by: @{post.userreg && post.userreg.userName ? post.userreg.userName : 'Unknown'}
             </span>
 
             <button
