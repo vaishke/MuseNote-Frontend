@@ -28,7 +28,8 @@ body {
 .profile-logo {
     height: 4rem;
     width: auto;
-    margin-left: 2rem;
+    margin-left: 0.2rem;
+    margin-top : -0.2rem;
 }
 
 .back-btn {

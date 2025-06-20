@@ -59,7 +59,9 @@ const PostCreate = () => {
       {/* Header */}
       <div className="top-bar-post">
         <div className="logo-container-post">
+          <Link to="/home" className='logo-img-post'>
           <img src={logo} alt="Logo" className="logo-img-post" />
+          </Link>
         </div>
         <div className="back-home">
           <Link to="/home" className="home-link">

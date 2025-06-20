@@ -68,7 +68,9 @@ const PostView = () => {
       {/* Header */}
       <div className="top-bar-postview">
         <div className="logo-container">
+           <Link to="/home" className='logo-img-post'>
           <img src={logo} alt="Logo" className="logo-img-home" />
+          </Link>
         </div>
         <div className="back-home">
           <Link to="/home" className="home-link">

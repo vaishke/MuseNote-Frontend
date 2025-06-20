@@ -111,7 +111,9 @@ const ProfilePage = () => {
   return (
     <div className="profile-page">
       <header className="profile-header">
+        <Link to="/home" className="profile-logo">
         <img src={logo} alt="Logo" className="profile-logo" />
+        </Link>
         <Link to="/home" className="back-btn">← Back to Home</Link>
       </header>
 
