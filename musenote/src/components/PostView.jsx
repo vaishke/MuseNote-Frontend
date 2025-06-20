@@ -4,6 +4,8 @@ import { FaArrowLeft, FaHeart } from 'react-icons/fa';
 import { IoIosContact } from "react-icons/io";
 import './PostView.css';
 import logo from '../assets/logo.png';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PostView = () => {
   const { postId } = useParams();
@@ -24,7 +26,10 @@ const PostView = () => {
       .then(data => {
         setPost(data);
       })
-      .catch(err => console.error('Error fetching post:', err));
+      .catch(err => {
+        console.error('Error fetching post:', err);
+        toast.error("Failed to load post", { position: "top-center" });
+      });
 
     // Check if liked
     fetch(`http://localhost:8085/isPostLiked/${postId}`, {
@@ -37,7 +42,10 @@ const PostView = () => {
       .then(data => {
         setLiked(data);
       })
-      .catch(err => console.error('Error checking like status:', err));
+      .catch(err => {
+        console.error('Error checking like status:', err);
+        toast.error("Failed to check like status", { position: "top-center" });
+      });
   }, [postId]);
 
   const handleLike = async () => {
@@ -52,34 +60,43 @@ const PostView = () => {
       });
 
       if (response.ok) {
-      const message = await response.text();
+        const message = await response.text();
 
-      if (message === "Post liked") {
-        setPost(prev => ({ ...prev, likes: prev.likes + 1 }));
-        setLiked(true);
-      } else if (message === "Post unliked") {
-        setPost(prev => ({ ...prev, likes: Math.max(prev.likes - 1, 0) }));
-        setLiked(false);
+        if (message === "Post liked") {
+          setPost(prev => ({ ...prev, likes: prev.likes + 1 }));
+          setLiked(true);
+          toast.success("Post liked!", { position: "top-center" });
+        } else if (message === "Post unliked") {
+          setPost(prev => ({ ...prev, likes: Math.max(prev.likes - 1, 0) }));
+          setLiked(false);
+          toast.info("Post unliked", { position: "top-center" });
+        } else {
+          console.warn("Unexpected like response:", message);
+          toast.warn("Unexpected like action", { position: "top-center" });
+        }
       } else {
-        console.warn("Unexpected like response:", message);
+        const errMsg = await response.text();
+        toast.error(errMsg || "Error toggling like", { position: "top-center" });
       }
-
-    } 
-      else {
-      const errMsg = await response.text();
-      alert(errMsg || "Error toggling like");
+    } catch (err) {
+      console.error("Error toggling like:", err);
+      toast.error("Unable to like the post", { position: "top-center" });
     }
-  } catch (err) {
-    console.error("Error toggling like:", err);
-  }
-};
+  };
 
   if (!post) {
-    return <div className="loading">Loading post...</div>;
+    return (
+      <div>
+        <ToastContainer />
+        <div className="loading">Loading post...</div>
+      </div>
+    );
   }
 
   return (
     <div>
+      <ToastContainer />
+      
       {/* Header */}
       <div className="top-bar-postview">
         <div className="logo-container">
@@ -102,7 +119,7 @@ const PostView = () => {
 
           <div className="post-meta">
             <span className="username">
-              <IoIosContact /> Posted by: @{post.userreg && post.userreg.userName ? post.userreg.userName : 'Unknown'}
+              <IoIosContact /> Posted by: @{post.userreg?.userName || 'Unknown'}
             </span>
 
             <button
@@ -114,11 +131,14 @@ const PostView = () => {
               {post.likes} {post.likes === 1 ? 'like' : 'likes'}
             </button>
           </div>
+
           <span className="genre">{post.genre}</span>
+
           <div className="post-tags">
             <span>{post.tag1}</span>
             <span style={{ marginLeft: '12px' }}>{post.tag2}</span>
           </div>
+
           {post.audioFileName && (
             <div className="audio-player">
               <audio controls controlsList="nodownload" style={{ width: '100%' }}>
@@ -127,9 +147,6 @@ const PostView = () => {
               </audio>
             </div>
           )}
-
-
-
         </div>
 
         <div className="post-body">

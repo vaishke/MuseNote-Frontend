@@ -5,6 +5,8 @@ import bg1 from '../assets/bg1.jpg';
 import bg2 from '../assets/bg2.jpg';
 import { FaInfo } from "react-icons/fa";
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './LandingPage.css';
 
 const LandingPage = () => {
@@ -25,13 +27,14 @@ const LandingPage = () => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", response.data.userName);
         console.log('Login Successful: ', response.data);
-        navigate('/home');
+        toast.success("Login successful!", { position: "top-center" });
+        setTimeout(() => navigate('/home'), 1500);
       } else {
-        alert("Invalid credentials");
+        toast.error("Invalid credentials", { position: "top-center" });
       }
     } catch (error) {
       console.error('Login Failed.', error);
-      alert("Login failed. Please check your credentials.");
+      toast.error("Login failed. Please check your credentials.", { position: "top-center" });
     }
   };
 
@@ -39,6 +42,7 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page-container">
+      <ToastContainer />
       <header className="landing-header">
         <img src={logo || "/placeholder.svg"} alt="Logo" className="logo-img" />
         <div className="nav-links">
