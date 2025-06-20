@@ -18,6 +18,11 @@ const ProfilePage = () => {
   const [newBio, setNewBio] = useState('');
   const [currentUser, setCurrentUser] = useState('');
   const [isFollowing, setIsFollowing] = useState(false);
+  const [followersList, setFollowersList] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
+
 
   useEffect(() => {
       const token = localStorage.getItem("token");
@@ -42,6 +47,7 @@ const ProfilePage = () => {
           setBio(profileRes.data.bio || '');
 
           // Fetch Count
+          
           const followRes = await axios.get(`http://localhost:8085/followCount/${username}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -55,6 +61,19 @@ const ProfilePage = () => {
             });
             setIsFollowing(followStatusRes.data.following);
           }
+
+          // Fetch followers list
+        const followersListRes = await axios.get(`http://localhost:8085/getFollowers/${username}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setFollowersList(followersListRes.data);
+
+        // Fetch following list
+        const followingListRes = await axios.get(`http://localhost:8085/getFollowing/${username}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setFollowingList(followingListRes.data);
+
 
         } catch (err) {
           console.error("Error fetching profile data:", err);
@@ -200,10 +219,50 @@ const ProfilePage = () => {
         </div>
 
         <div className="right-section">
-          <div className="stats"><strong>{followers}</strong><span>Followers</span></div>
-          <div className="stats"><strong>{following}</strong><span>Following</span></div>
+          <div className="stats" onClick={() => setShowFollowers(!showFollowers)}>
+            <strong>{followers}</strong><span>Followers</span>
+          </div>
+          <div className="stats" onClick={() => setShowFollowing(!showFollowing)}>
+            <strong>{following}</strong><span>Following</span>
+          </div>
+
+          {/* <div className="stats"><strong>{followers}</strong><span>Followers</span></div>
+          <div className="stats"><strong>{following}</strong><span>Following</span></div> */}
         </div>
       </section>
+            {showFollowers && (
+        <div className="follow-list">
+          <h4>Followers</h4>
+          <ul>
+            {followersList.length === 0 ? (
+              <li>No followers yet.</li>
+            ) : (
+              followersList.map((f, i) => (
+                <li key={i}>
+                  <Link to={`/profile/${f}`}>{f}</Link>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+      )}
+
+      {showFollowing && (
+        <div className="follow-list">
+          <h4>Following</h4>
+          <ul>
+            {followingList.length === 0 ? (
+              <li>Not following anyone yet.</li>
+            ) : (
+              followingList.map((f, i) => (
+                <li key={i}>
+                  <Link to={`/profile/${f}`}>{f}</Link>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+      )}
 
       <div className="posts-box">
         <div className="posts-header">

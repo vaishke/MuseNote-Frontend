@@ -255,3 +255,26 @@ body {
     background-color: #f44336;
     color: white;
 }
+
+.follow-list {
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem;
+  max-width: 400px;
+}
+
+.follow-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.follow-list li {
+  margin: 0.5rem 0;
+}
+
+.follow-list a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
