@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaArrowLeft, FaUserCircle } from 'react-icons/fa';
 import { MdModeEdit, MdSave, MdDelete } from "react-icons/md";
 import PostPreview from './PostPreview';
 import logo from '../assets/logo.png';
@@ -22,6 +22,8 @@ const ProfilePage = () => {
   const [followingList, setFollowingList] = useState([]);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const menuRef = useRef();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,37 +35,27 @@ const ProfilePage = () => {
 
     const fetchUserData = async () => {
       try {
-        const postsRes = await axios.get(`http://localhost:8085/getPostsByUser/${username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const postsRes = await axios.get(`http://localhost:8085/getPostsByUser/${username}`, { headers });
         setPosts(postsRes.data);
 
-        const profileRes = await axios.get(`http://localhost:8085/getUserByName/${username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const profileRes = await axios.get(`http://localhost:8085/getUserByName/${username}`, { headers });
         setBio(profileRes.data.bio || '');
 
-        const followRes = await axios.get(`http://localhost:8085/followCount/${username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const followRes = await axios.get(`http://localhost:8085/followCount/${username}`, { headers });
         setFollowers(followRes.data.followers);
         setFollowing(followRes.data.following);
 
         if (current && current !== username) {
-          const followStatusRes = await axios.get(`http://localhost:8085/isFollowing/${current}/${username}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const followStatusRes = await axios.get(`http://localhost:8085/isFollowing/${current}/${username}`, { headers });
           setIsFollowing(followStatusRes.data.following);
         }
 
-        const followersListRes = await axios.get(`http://localhost:8085/getFollowers/${username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const followersListRes = await axios.get(`http://localhost:8085/getFollowers/${username}`, { headers });
         setFollowersList(followersListRes.data);
 
-        const followingListRes = await axios.get(`http://localhost:8085/getFollowing/${username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const followingListRes = await axios.get(`http://localhost:8085/getFollowing/${username}`, { headers });
         setFollowingList(followingListRes.data);
 
       } catch (err) {
@@ -73,6 +65,16 @@ const ProfilePage = () => {
 
     fetchUserData();
   }, [username]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleEdit = () => {
     setEditingBio(true);
@@ -108,21 +110,57 @@ const ProfilePage = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account? This cannot be undone.")) return;
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:8085/deleteUser/${username}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert("Account deleted.");
+      localStorage.removeItem("token");
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Error deleting account:", err);
+      alert("Failed to delete account.");
+    }
+  };
+
   return (
     <div className="profile-page">
       <header className="profile-header">
         <Link to="/home" className="profile-logo">
-        <img src={logo} alt="Logo" className="profile-logo" />
+          <img src={logo} alt="Logo" className="profile-logo" />
         </Link>
-        <Link to="/home" className="back-btn">← Back to Home</Link>
+        <div className="header-right">
+          <Link to="/home" className="back-btn">
+            <FaArrowLeft style={{ marginRight: '8px' }} /> Back
+          </Link>
+          {currentUser === username && (
+            <div className="profile-menu" ref={menuRef}>
+              <button className="three-dot-btn" onClick={() => setShowProfileDropdown(!showProfileDropdown)}>⋮</button>
+              {showProfileDropdown && (
+                <div className="profile-dropdown-menu">
+                  <button className="dropdown-item" onClick={handleDeleteAccount}>Delete Account</button>
+                  <button className="dropdown-item" onClick={handleLogout}>Log Out</button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </header>
 
       <section className="profile-top">
         <div className="avatar-section">
           <FaUserCircle size={120} className="avatar-icon" />
         </div>
+
         <div className="center-section">
-          
           <div className="bio-div">
             <h2 className="profile-username">{username}</h2>
             {editingBio ? (
@@ -143,6 +181,7 @@ const ProfilePage = () => {
               </>
             )}
           </div>
+
           {currentUser && currentUser !== username && (
             <button
               className={`follow-btn ${isFollowing ? 'unfollow' : 'follow'}`}
@@ -156,7 +195,6 @@ const ProfilePage = () => {
                   }, {
                     headers: { Authorization: `Bearer ${token}` }
                   });
-
                   setIsFollowing(!isFollowing);
                   setFollowers(prev => isFollowing ? prev - 1 : prev + 1);
                 } catch (err) {
@@ -179,37 +217,36 @@ const ProfilePage = () => {
         </div>
       </section>
 
-      {showFollowers && (
-        <div className="follow-list">
-          <h4>Followers</h4>
-          <ul>
-            {followersList.length === 0 ? (
-              <li>No followers yet.</li>
-            ) : (
-              followersList.map((f, i) => (
-                <li key={i}>
-                  <Link to={`/profile/${f}`}>{f}</Link>
-                </li>
-              ))
-            )}
-          </ul>
-        </div>
-      )}
-
-      {showFollowing && (
-        <div className="follow-list">
-          <h4>Following</h4>
-          <ul>
-            {followingList.length === 0 ? (
-              <li>Not following anyone yet.</li>
-            ) : (
-              followingList.map((f, i) => (
-                <li key={i}>
-                  <Link to={`/profile/${f}`}>{f}</Link>
-                </li>
-              ))
-            )}
-          </ul>
+      {(showFollowers || showFollowing) && (
+        <div className="follow-lists-container">
+          {showFollowers && (
+            <div className="follow-list">
+              <h4>Followers</h4>
+              <ul>
+                {followersList.length === 0 ? (
+                  <li>No followers yet.</li>
+                ) : (
+                  followersList.map((f, i) => (
+                    <li key={i}><Link to={`/profile/${f}`}>{f}</Link></li>
+                  ))
+                )}
+              </ul>
+            </div>
+          )}
+          {showFollowing && (
+            <div className="follow-list">
+              <h4>Following</h4>
+              <ul>
+                {followingList.length === 0 ? (
+                  <li>Not following anyone yet.</li>
+                ) : (
+                  followingList.map((f, i) => (
+                    <li key={i}><Link to={`/profile/${f}`}>{f}</Link></li>
+                  ))
+                )}
+              </ul>
+            </div>
+          )}
         </div>
       )}
 
@@ -226,7 +263,7 @@ const ProfilePage = () => {
           {posts.length === 0 ? (
             <p className="no-posts-message">No posts yet.</p>
           ) : (
-            posts.map((post, index) => (
+            posts.map((post) => (
               <div className="post-container" key={post.postId}>
                 <Link to={`/postview/${post.postId}`} className="post-link">
                   <PostPreview

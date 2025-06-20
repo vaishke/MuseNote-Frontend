@@ -8,7 +8,7 @@ import logo from '../assets/logo.png';
 const PostView = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
-  const [liked, setLiked] = useState(false); // Track if user liked this post
+  const [liked, setLiked] = useState(false); 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -75,7 +75,7 @@ const PostView = () => {
         <div className="back-home">
           <Link to="/home" className="home-link">
             <FaArrowLeft className="home-icon" />
-            <span>Back to Home</span>
+            <span>Back</span>
           </Link>
         </div>
       </div>
