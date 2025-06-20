@@ -7,6 +7,9 @@ import axios from 'axios';
 const DashboardContent = ({ posts }) => {
   const [showFilter, setShowFilter] = useState(false);
   const filterRef = useRef();
+  const [activeFilter, setActiveFilter] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
   const toggleFilter = () => setShowFilter((prev) => !prev);
 
@@ -19,10 +22,6 @@ const DashboardContent = ({ posts }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const [activeFilter, setActiveFilter] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredPosts, setFilteredPosts] = useState([]);
 
   const handleFilterClick = (type) => {
     setActiveFilter(type);
@@ -42,18 +41,17 @@ const DashboardContent = ({ posts }) => {
       } else if (activeFilter === 'Tag') {
         endpoint = `/getPostsByTags/${searchTerm}`;
       } else {
-        endpoint = `/getPostsByTitle/${searchTerm}`; // optional: fallback to title search
+        endpoint = `/getPostsByTitle/${searchTerm}`;
       }
 
       const res = await axios.get(`http://localhost:8085${endpoint}`);
       setFilteredPosts(res.data);
     } catch (err) {
       console.error('Search failed:', err);
-      alert("No results found or error fetching data.");
+      alert('No results found or error fetching data.');
       setFilteredPosts([]);
     }
   };
-
 
   return (
     <div className="dashboard-container">
@@ -101,8 +99,6 @@ const DashboardContent = ({ posts }) => {
           />
         </div>
 
-
-
         <Link to="/create">
           <button className="add-button" title="Add New Lyrics">
             <FaPlus size={18} />
@@ -129,11 +125,10 @@ const PostCard = ({ post }) => {
 
   const handleLike = async (e) => {
     e.preventDefault();
-    if (liked) return;
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Please login to like posts.");
+      alert("Please login to like/unlike posts.");
       return;
     }
 
@@ -147,18 +142,23 @@ const PostCard = ({ post }) => {
           },
         }
       );
+
       if (res.status === 200) {
-        setLikes((prev) => prev + 1);
-        setLiked(true);
+        const message = res.data;
+        if (message === "Post liked") {
+          setLikes((prev) => prev + 1);
+          setLiked(true);
+        } else if (message === "Post unliked") {
+          setLikes((prev) => Math.max(prev - 1, 0));
+          setLiked(false);
+        }
       }
     } catch (err) {
-      if (err.response?.status === 400) {
-        alert("You already liked this post!");
-        setLiked(true);
-      } else if (err.response?.status === 403) {
+      console.error("Like/unlike error:", err);
+      if (err.response?.status === 403) {
         alert("Unauthorized: Please login again.");
       } else {
-        alert("Error liking post.");
+        alert("Error toggling like.");
       }
     }
   };
@@ -175,11 +175,7 @@ const PostCard = ({ post }) => {
       </Link>
 
       <div className="like-section">
-        <button
-          className="like-button"
-          onClick={handleLike}
-          disabled={liked}
-        >
+        <button className="like-button" onClick={handleLike}>
           <FaHeart style={{ color: liked ? 'red' : 'white' }} />
         </button>
         <span className="like-count">{likes} Likes</span>
