@@ -206,7 +206,7 @@ const ProfilePage = () => {
 
       <div className="posts-box">
         <div className="posts-header">
-          <h3 className="section-title">My Posts</h3>
+          <h3 className="section-title">{username} Posts</h3>
           {currentUser === username && (
             <Link to="/create">
               <button className="add-lyrics-btn" title="Add New Lyrics">Create Post</button>

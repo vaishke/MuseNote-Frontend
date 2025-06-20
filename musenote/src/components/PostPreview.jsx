@@ -22,7 +22,6 @@ const PostPreview = ({ postid, title, content, likes, userid }) => {
             navigate(`/profile/${userid}`);
           }}
         >
-          @{userid}
         </span>
         <span className="likes">
           <FaHeart className="heart-icon" /> {likes} likes

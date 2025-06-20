@@ -11,13 +11,49 @@ const RegisterPage = () => {
   const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
 
-  
-  const handleRegister = async () => {
+const validateEmail = (email) => {
+  const isValid = /^[^\s@]+@gmail\.com$/.test(email);
+  setEmailError(isValid ? '' : 'Please enter a valid Gmail address (e.g., yourname@gmail.com).');
+  return isValid;
+};
+
+const handleRegister = async () => {
     if (!username || !email || !password) {
       alert('Please fill in all required fields.');
       return;
     }
 
+    if (!validateEmail(email)) {
+      alert('Please enter valid email')
+      return;
+    } 
+    try {
+      const newUser = {
+        userName: username,
+        mail: email,
+        password: password,
+        bio: bio
+      };
+
+      console.log('Register attempt:', newUser);
+      const response = await axios.post('http://localhost:8085/addUser', newUser);
+
+      console.log('Registration Successful: ', response.data);
+
+      alert(`🎉 Welcome ${username}! Check your Gmail for a welcome message.`);
+      navigate('/'); // Redirect to login page
+    } catch (error) {
+      if (
+        error.response?.data?.includes("Duplicate") ||
+        error.response?.status === 500
+      ) {
+        alert("This email is already registered. Please log in.");
+      } else {
+        alert("Registration failed. Please try again later.");
+      }
+      console.error('Registration failed:', error);
+    }
+    /*
     try {
       const newUser = {
         userName: username,
@@ -31,8 +67,7 @@ const RegisterPage = () => {
       navigate('/');
     } catch (error) {
       console.error('Registration Failed.', error);
-      alert('Registration failed. Please try again.');
-    }
+    }*/
   };
 
   return (

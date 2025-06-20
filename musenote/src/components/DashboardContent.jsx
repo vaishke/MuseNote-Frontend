@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaPlus, FaFilter, FaHeart } from 'react-icons/fa';
+import { FaPlus, FaFilter, FaHeart, FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './DashboardContent.css';
 import axios from 'axios';
@@ -20,9 +20,40 @@ const DashboardContent = ({ posts }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const [activeFilter, setActiveFilter] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredPosts, setFilteredPosts] = useState([]);
+
   const handleFilterClick = (type) => {
-    alert(`Filter by ${type}`);
+    setActiveFilter(type);
+    setShowFilter(false);
   };
+
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) return;
+
+    try {
+      let endpoint = '';
+
+      if (activeFilter === 'User') {
+        endpoint = `/getPostsByUser/${searchTerm}`;
+      } else if (activeFilter === 'Genre') {
+        endpoint = `/getPostsByGenre/${searchTerm}`;
+      } else if (activeFilter === 'Tag') {
+        endpoint = `/getPostsByTags/${searchTerm}`;
+      } else {
+        endpoint = `/getPostsByTitle/${searchTerm}`; // optional: fallback to title search
+      }
+
+      const res = await axios.get(`http://localhost:8085${endpoint}`);
+      setFilteredPosts(res.data);
+    } catch (err) {
+      console.error('Search failed:', err);
+      alert("No results found or error fetching data.");
+      setFilteredPosts([]);
+    }
+  };
+
 
   return (
     <div className="dashboard-container">
@@ -31,13 +62,46 @@ const DashboardContent = ({ posts }) => {
           <FaFilter className="filter-icon" onClick={toggleFilter} />
           {showFilter && (
             <div className="filter-dropdown-simple">
+              <div onClick={() => handleFilterClick('User')} className="filter-item">User</div>
               <div onClick={() => handleFilterClick('Genre')} className="filter-item">Genre</div>
               <div onClick={() => handleFilterClick('Tag')} className="filter-item">Tag</div>
             </div>
           )}
         </div>
 
-        <input type="text" placeholder="Search lyrics..." className="search-bar" />
+        <div className="search-container">
+          {activeFilter && (
+            <span className="search-chip">
+              {activeFilter}
+              <button
+                className="remove-chip"
+                onClick={() => setActiveFilter(null)}
+              >
+                ×
+              </button>
+            </span>
+          )}
+          <input
+            type="text"
+            className="search-bar-with-chip"
+            placeholder="Search lyrics..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }}
+          />
+          <FaSearch
+            className="search-icon"
+            onClick={handleSearch}
+            title="Search"
+            style={{ cursor: 'pointer', marginLeft: '8px' }}
+          />
+        </div>
+
+
 
         <Link to="/create">
           <button className="add-button" title="Add New Lyrics">
@@ -47,8 +111,10 @@ const DashboardContent = ({ posts }) => {
       </div>
 
       <div className="posts-section">
-        {posts.length > 0 ? (
-          posts.map((post) => <PostCard key={post.postId} post={post} />)
+        {(filteredPosts.length > 0 ? filteredPosts : posts).length > 0 ? (
+          (filteredPosts.length > 0 ? filteredPosts : posts).map((post) => (
+            <PostCard key={post.postId} post={post} />
+          ))
         ) : (
           <p>No posts available</p>
         )}

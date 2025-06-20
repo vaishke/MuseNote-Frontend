@@ -230,21 +230,22 @@ body {
 }
 
 .follow-btn {
-  margin-top: 10px;
-  padding: 8px 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    margin-top: 1%;
+    margin-left: -8%;
+    padding: 2% 7%;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .follow-btn.follow {
-  background-color: #4CAF50;
-  color: white;
+    background-color: #06daa9ab;
+    color: white;
 }
 
 .follow-btn.unfollow {
-  background-color: #f44336;
-  color: white;
+    background-color: #f44336;
+    color: white;
 }
