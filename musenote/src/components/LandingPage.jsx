@@ -44,7 +44,7 @@ const LandingPage = () => {
     <div className="landing-page-container">
       <ToastContainer />
       <header className="landing-header">
-        <img src={logo} alt="Logo" className="logo-img" />
+        <img src={logo || "/placeholder.svg"} alt="Logo" className="logo-img" />
         <div className="nav-links">
           <a href="#about" className="signin-link">
             <AboutIcon />
@@ -54,7 +54,7 @@ const LandingPage = () => {
       </header>
 
       <div className="background-image">
-        <img src={bg2} alt="Background" className="bgimg" />
+        <img src={bg2 || "/placeholder.svg"} alt="Background" className="bgimg" />
         <div className="login-box-wrapper">
           <div className="login-box">
             <input
@@ -76,7 +76,7 @@ const LandingPage = () => {
             </button>
 
             <p className="login-link-text">
-              Don’t have an account?
+              Don't have an account?
               <Link to="/register" className="login-link-span"> Create new account</Link>
             </p>
           </div>
@@ -84,15 +84,63 @@ const LandingPage = () => {
       </div>
 
       <section id="about" className="about-section">
-        <h2>About</h2>
-        <div className="about-content">
-          <div className="about-text">
-            <p>
-              MuseNote is a creative space where music lovers, lyricists and artists come together
-              to share the soul of songs — the lyrics...
-            </p>
+        <div className="about-container">
+          <h2>About MuseNote</h2>
+          <p className="about-subtitle">Where lyrics come alive and music stories are shared</p>
+          
+          <div className="about-content">
+            <div className="about-text">
+              <h3>Your Creative Musical Journey</h3>
+              <p>
+                MuseNote is a <span className="highlight">creative space</span> where music lovers, lyricists and artists come together
+                to share the soul of songs — the lyrics. Whether you're penning your own verses or
+                sharing lines that moved you, MuseNote is your stage.
+              </p>
+              <p>
+                Post your favorite lyrics, discover new ones, follow lyricists you love, and build a
+                <span className="highlight"> personal collection</span> of lyrical moments that resonate with your soul.
+              </p>
+              <p>
+                Let the words of music speak — <span className="highlight">one lyric at a time</span>.
+              </p>
+            </div>
+            <div className="about-image-container">
+              <img src={bg1 || "/placeholder.svg"} alt="About MuseNote" className="bgimg_about" />
+            </div>
           </div>
-          <img src={bg1} alt="About Visual" className="bgimg_about" />
+          
+          <div className="features-grid">
+            <div className="feature-card">
+              <span className="feature-icon">🎵</span>
+              <h4>Share Your Lyrics</h4>
+              <p>Express yourself by sharing your original lyrics or your favorite song verses with the community.</p>
+            </div>
+            <div className="feature-card">
+              <span className="feature-icon">🔍</span>
+              <h4>Discover New Music</h4>
+              <p>Explore a vast collection of lyrics from various genres and discover your next favorite song.</p>
+            </div>
+            <div className="feature-card">
+              <span className="feature-icon">👥</span>
+              <h4>Connect with Artists</h4>
+              <p>Follow your favorite lyricists and artists, and build meaningful connections in the music community.</p>
+            </div>
+            <div className="feature-card">
+              <span className="feature-icon">📚</span>
+              <h4>Build Your Collection</h4>
+              <p>Create your personal library of meaningful lyrics and organize them by mood, genre, or artist.</p>
+            </div>
+            <div className="feature-card">
+              <span className="feature-icon">✨</span>
+              <h4>Get Inspired</h4>
+              <p>Find inspiration from other creators and let the power of words fuel your own musical creativity.</p>
+            </div>
+            <div className="feature-card">
+              <span className="feature-icon">🎤</span>
+              <h4>Showcase Talent</h4>
+              <p>Use MuseNote as your platform to showcase your lyrical talent and gain recognition from peers.</p>
+            </div>
+          </div>
         </div>
       </section>
 
