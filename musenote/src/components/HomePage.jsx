@@ -38,7 +38,7 @@ const HomePage = () => {
         console.error("Failed to fetch posts:", error);
         if (error.response?.status === 403) {
           alert("Session expired. Please login again.");
-          window.location.href = "/login";
+          window.location.href = "/";
         }
       }
     };

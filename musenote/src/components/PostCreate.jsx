@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { generatePath, Link } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import logo from '../assets/logo.png';
 import './PostCreate.css';
@@ -10,6 +10,13 @@ const PostCreate = () => {
   const [tag1, setTag1] = useState('');
   const [tag2, setTag2] = useState('');
   const [genre, setGenre] = useState('');
+  const [file, setFile] = useState(null);
+  const fileInputRef = useRef();
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +42,7 @@ const PostCreate = () => {
 
       if (response.ok) {
         alert("Post submitted successfully!");
+        fileInputRef.current.value = "";
         window.location.href = "/home";
       } else {
         const err = await response.json();
@@ -45,7 +53,6 @@ const PostCreate = () => {
       alert("An unexpected error occurred.");
     }
   };
-  
 
   return (
     <div>
@@ -68,50 +75,76 @@ const PostCreate = () => {
         <div className="divider"></div>
 
         <form onSubmit={handleSubmit}>
-          <label className="input-label">Title</label>
-          <input
-            type="text"
-            className="input-field"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+          <div className="form-group">
+            <label className="input-label">
+              Title <span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              className="input-field"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
 
-          <label className="input-label">Content</label>
-          <textarea
-            className="textarea-field"
-            rows="8"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
-          ></textarea>
+          <div className="form-group">
+            <label className="input-label">
+              Content <span className="required">*</span>
+            </label>
+            <textarea
+              className="textarea-field"
+              rows="8"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              required
+            ></textarea>
+          </div>
 
-          <label className="tag1">Tag-1</label>
-          <input
-            type="text"
-            className="input-field"
-            value={tag1}
-            onChange={(e) => setTag1(e.target.value)}
-            required
-          />
+          <div className="form-group tag-container">
+            <div className="input-group">
+              <label className="input-label">Tag-1</label>
+              <input
+                type="text"
+                className="input-field"
+                value={tag1}
+                onChange={(e) => setTag1(e.target.value)}
+              />
+            </div>
+            <div className="input-group">
+              <label className="input-label">Tag-2</label>
+              <input
+                type="text"
+                className="input-field"
+                value={tag2}
+                onChange={(e) => setTag2(e.target.value)}
+              />
+            </div>
+          </div>
 
-          <label className="tag2">Tag-2</label>
-          <input
-            type="text"
-            className="input-field"
-            value={tag2}
-            onChange={(e) => setTag2(e.target.value)}
-            required
-          />
+          <div className="form-group">
+            <label className="input-label">
+              Genre <span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              className="input-field"
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+              required
+            />
+          </div>
 
-          <label className="genre">Genre</label>
-          <input
-            type="text"
-            className="input-field"
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-            required
-          />
+          <div className="form-group">
+            <label className="input-label">Upload Audio</label>
+            <input
+              type="file"
+              accept=".mp3, .wav"
+              className="input-field"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+            />
+          </div>
 
           <button type="submit" className="submit-button">Post</button>
         </form>
