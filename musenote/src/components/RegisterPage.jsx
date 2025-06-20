@@ -6,11 +6,12 @@ import axios from 'axios';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [bio, setBio] = useState('');
+  const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
 
+  
   const handleRegister = async () => {
     if (!username || !email || !password) {
       alert('Please fill in all required fields.');
@@ -27,9 +28,10 @@ const RegisterPage = () => {
       console.log('Register attempt:', newUser);
       const response = await axios.post('http://localhost:8085/addUser', newUser);
       console.log('Registration Successful: ', response.data);
-      navigate('/'); // Redirect to landing page
+      navigate('/');
     } catch (error) {
       console.error('Registration Failed.', error);
+      alert('Registration failed. Please try again.');
     }
   };
 
@@ -50,11 +52,16 @@ const RegisterPage = () => {
           />
           <input
             type="email"
-            placeholder="Email ID"
+            placeholder="Email ID (only Gmail)"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              validateEmail(e.target.value);
+            }}
             className="register-input"
           />
+          {emailError && <p className="error-text">{emailError}</p>}
+
           <input
             type="password"
             placeholder="Password"
@@ -62,14 +69,6 @@ const RegisterPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="register-input"
           />
-          {/* Optional bio field — can remove if not needed */}
-          {/* <input
-            type="text"
-            placeholder="Bio (optional)"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            className="register-input"
-          /> */}
           <button
             onClick={handleRegister}
             className="register-button"
