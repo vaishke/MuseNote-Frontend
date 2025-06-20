@@ -149,8 +149,9 @@ const ProfilePage = () => {
           <FaUserCircle size={120} className="avatar-icon" />
         </div>
         <div className="center-section">
-          <h2 className="profile-username">{username}</h2>
+          
           <div className="bio-div">
+            <h2 className="profile-username">{username}</h2>
             {editingBio ? (
               currentUser === username && (
                 <>
@@ -164,13 +165,15 @@ const ProfilePage = () => {
               )
             ) : (
               <>
-                <p className="bio">{bio}</p>
+                <p className="bio">{bio||'No bio yet'}</p>
                 {currentUser === username && (
                   <button onClick={handleEdit}><MdModeEdit /></button>
                 )}
               </>
             )}
-            {currentUser && currentUser !== username && (
+
+          </div>
+          {currentUser && currentUser !== username && (
               <button
                 className={`follow-btn ${isFollowing ? 'unfollow' : 'follow'}`}
                 onClick={async () => {
@@ -194,8 +197,6 @@ const ProfilePage = () => {
                 {isFollowing ? "Unfollow" : "Follow"}
               </button>
             )}
-
-          </div>
         </div>
 
         <div className="right-section">

@@ -50,7 +50,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 50px 40px 30px;
+    padding: 10px 50px 10px;
     border-bottom: 1px solid #333;
     flex-wrap: wrap;
 }
@@ -72,7 +72,7 @@ body {
 
 .profile-username {
     font-size: 22px;
-    margin-bottom: 8px;
+    margin-bottom: 35%;
 }
 
 .bio {
@@ -217,13 +217,19 @@ body {
 .bio-div {
     display: flex;
     align-items: center;
-    gap: 10px;
     margin-left: 45%;
+}
+
+.bio {
+    margin-left: -10%;
+    margin-right: 10%;
 }
 
 .bio-edit-text {
     width: 300px;
     height: 60px;
+    margin-left: -15%;
+    margin-top: 10%;
     font-size: 14px;
     padding: 8px;
     resize: none;
@@ -231,7 +237,7 @@ body {
 
 .follow-btn {
     margin-top: 1%;
-    margin-left: -8%;
+    margin-left: -150%;
     padding: 2% 7%;
     font-weight: bold;
     border: none;
