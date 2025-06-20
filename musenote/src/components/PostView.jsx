@@ -52,18 +52,27 @@ const PostView = () => {
       });
 
       if (response.ok) {
-      const updatedLikes = (liked && post.likes != 0) ? (post.likes - 1)%2 : (post.likes + 1)%2;
-      setPost(prev => ({ ...prev, likes: updatedLikes }));
-      setLiked(!liked); 
+      const message = await response.text();
+
+      if (message === "Post liked") {
+        setPost(prev => ({ ...prev, likes: prev.likes + 1 }));
+        setLiked(true);
+      } else if (message === "Post unliked") {
+        setPost(prev => ({ ...prev, likes: Math.max(prev.likes - 1, 0) }));
+        setLiked(false);
+      } else {
+        console.warn("Unexpected like response:", message);
+      }
+
     } 
       else {
-        const errMsg = await response.text();
-        alert(errMsg || "Error toggling like");
-      }
-    } catch (err) {
-      console.error("Error toggling like:", err);
+      const errMsg = await response.text();
+      alert(errMsg || "Error toggling like");
     }
-  };
+  } catch (err) {
+    console.error("Error toggling like:", err);
+  }
+};
 
   if (!post) {
     return <div className="loading">Loading post...</div>;
@@ -101,7 +110,7 @@ const PostView = () => {
               onClick={handleLike}
               title={liked ? "Click to unlike" : "Click to like"}
             >
-              <FaHeart className="heart-icon" style={{ color: (post.likes) ? 'red' : 'gray' }} />
+              <FaHeart className="heart-icon" style={{ color: liked ? 'red' : 'gray' }} />
               {post.likes} {post.likes === 1 ? 'like' : 'likes'}
             </button>
           </div>
