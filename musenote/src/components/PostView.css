@@ -89,9 +89,16 @@
     color: #ff0000;
 }
 
+.genre {
+    font-size: 14px;
+    color: white;
+    margin-left: 2%;
+    padding-bottom: 1%;
+}
+
 .post-tags {
     font-size: 14px;
-    color: #ccc;
+    color: rgb(57, 57, 227);
     margin-left: 2%;
     padding-bottom: 1%;
 }
