@@ -77,8 +77,8 @@ const HomePage = () => {
     <button
       className="dropdown-item logout"
       onClick={() => {
-        localStorage.removeItem("token"); // Clear the token
-        window.location.href = "/"; // Redirect to landing page
+        localStorage.removeItem("token"); 
+        window.location.href = "/"; 
       }}
     >
     Log Out

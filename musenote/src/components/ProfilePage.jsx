@@ -7,6 +7,8 @@ import logo from '../assets/logo.png';
 import './ProfilePage.css';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -98,15 +100,19 @@ const ProfilePage = () => {
   };
 
   const handleDelete = async (postId) => {
-    if (!window.confirm("Are you sure you want to delete this post?")) return;
+    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+    if (!confirmDelete) return;
+
     try {
       const token = localStorage.getItem("token");
       await axios.delete(`http://localhost:8085/deletePost/${postId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPosts(posts.filter(post => post.postId !== postId));
+      toast.success("Post deleted.", { position: "top-center" });
     } catch (err) {
       console.error("Error deleting post:", err);
+      toast.error("Failed to delete post.", { position: "top-center" });
     }
   };
 
@@ -116,23 +122,30 @@ const ProfilePage = () => {
   };
 
   const handleDeleteAccount = async () => {
-    if (!window.confirm("Are you sure you want to delete your account? This cannot be undone.")) return;
+    const confirmDelete = window.confirm("Are you sure you want to delete your account? This cannot be undone.");
+    if (!confirmDelete) return;
+
     try {
       const token = localStorage.getItem("token");
       await axios.delete(`http://localhost:8085/deleteUser/${username}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      alert("Account deleted.");
+
+      toast.success("Account deleted.", { position: "top-center" });
       localStorage.removeItem("token");
-      window.location.href = "/";
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
     } catch (err) {
       console.error("Error deleting account:", err);
-      alert("Failed to delete account.");
+      toast.error("Failed to delete account.", { position: "top-center" });
     }
   };
 
   return (
     <div className="profile-page">
+      <ToastContainer />
+
       <header className="profile-header">
         <Link to="/home" className="profile-logo">
           <img src={logo} alt="Logo" className="profile-logo" />

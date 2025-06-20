@@ -5,6 +5,8 @@ import bg1 from '../assets/bg1.jpg';
 import bg2 from '../assets/bg2.jpg';
 import { FaInfo } from "react-icons/fa";
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './LandingPage.css';
 
 const LandingPage = () => {
@@ -25,13 +27,14 @@ const LandingPage = () => {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", response.data.userName);
         console.log('Login Successful: ', response.data);
-        navigate('/home');
+        toast.success("Login successful!", { position: "top-center" });
+        setTimeout(() => navigate('/home'), 1500);
       } else {
-        alert("Invalid credentials");
+        toast.error("Invalid credentials", { position: "top-center" });
       }
     } catch (error) {
       console.error('Login Failed.', error);
-      alert("Login failed. Please check your credentials.");
+      toast.error("Login failed. Please check your credentials.", { position: "top-center" });
     }
   };
 
@@ -39,6 +42,7 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page-container">
+      <ToastContainer />
       <header className="landing-header">
         <img src={logo} alt="Logo" className="logo-img" />
         <div className="nav-links">
@@ -85,13 +89,7 @@ const LandingPage = () => {
           <div className="about-text">
             <p>
               MuseNote is a creative space where music lovers, lyricists and artists come together
-              to share the soul of songs — the lyrics. Whether you're penning your own verses or
-              sharing lines that moved you, MuseNote is your stage.
-              <br /><br />
-              Post your favorite lyrics, discover new ones, follow lyricists you love, and build a
-              personal collection of lyrical moments that resonate.
-              <br /><br />
-              Let the words of music speak — one lyric at a time.
+              to share the soul of songs — the lyrics...
             </p>
           </div>
           <img src={bg1} alt="About Visual" className="bgimg_about" />
@@ -101,14 +99,13 @@ const LandingPage = () => {
       <footer className="footer">
         <p>&copy; {new Date().getFullYear()} MuseNote. All rights reserved.</p>
         <a
-        href="mailto:srinikhilamaravajjala@gmail.com?subject=MuseNote%20Inquiry&body=Hi%20MuseNote%20Team,%0D%0A%0D%0AI would like to..."
-        target="_blank"
-        rel="noopener noreferrer"
-        className="contact-link"
-      >
-        Contact Us
-      </a>
-
+          href="mailto:srinikhilamaravajjala@gmail.com?subject=MuseNote%20Inquiry&body=Hi%20MuseNote%20Team,%0D%0A%0D%0AI would like to..."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="contact-link"
+        >
+          Contact Us
+        </a>
       </footer>
     </div>
   );
