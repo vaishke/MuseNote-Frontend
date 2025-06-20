@@ -26,14 +26,18 @@
     margin-left: 0.5rem;
 }
 
+
 /* Profile dropdown container */
+
 .profile-dropdown {
     position: relative;
     margin-right: 1.5rem;
     cursor: pointer;
 }
 
+
 /* Profile icon only */
+
 .profile-icon {
     transition: transform 0.2s ease;
 }
@@ -42,7 +46,9 @@
     transform: scale(1.1);
 }
 
+
 /* Dropdown menu styling */
+
 .dropdown-menu {
     position: absolute;
     right: 0;
@@ -58,7 +64,9 @@
     z-index: 1001;
 }
 
+
 /* Individual items in the dropdown */
+
 .dropdown-item {
     padding: 10px 20px;
     color: white;
@@ -75,7 +83,9 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+
 /* Specific logout button styling if needed */
+
 .logout {
     font-weight: bold;
 }
