@@ -8,34 +8,38 @@ import logo from '../assets/logo.png';
 const PostView = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
-  const [liked, setLiked] = useState(false); // Track if user liked this post
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    // Fetch post details
+    // Fetch post
     fetch(`http://localhost:8085/getPostById/${postId}`, {
-      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch post');
-        }
-        return response.json();
-      })
+      .then(res => res.json())
       .then(data => {
         setPost(data);
       })
-      .catch(error => {
-        console.error('Error fetching post:', error);
-      });
+      .catch(err => console.error('Error fetching post:', err));
+
+    // Check if liked
+    fetch(`http://localhost:8085/isPostLiked/${postId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        setLiked(data);
+      })
+      .catch(err => console.error('Error checking like status:', err));
   }, [postId]);
 
-  // Handle Like button click
   const handleLike = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -48,14 +52,16 @@ const PostView = () => {
       });
 
       if (response.ok) {
-        setPost(prev => ({ ...prev, likes: prev.likes + 1 }));
-        setLiked(true);
-      } else {
+      const updatedLikes = (liked && post.likes != 0) ? (post.likes - 1)%2 : (post.likes + 1)%2;
+      setPost(prev => ({ ...prev, likes: updatedLikes }));
+      setLiked(!liked); 
+    } 
+      else {
         const errMsg = await response.text();
-        alert(errMsg || "Failed to like post.");
+        alert(errMsg || "Error toggling like");
       }
     } catch (err) {
-      console.error("Error liking post:", err);
+      console.error("Error toggling like:", err);
     }
   };
 
@@ -93,16 +99,14 @@ const PostView = () => {
             <button
               className="likes-button"
               onClick={handleLike}
-              disabled={liked}
-              title={liked ? "Already liked" : "Click to like"}
+              title={liked ? "Click to unlike" : "Click to like"}
             >
-              <FaHeart className="heart-icon" />
+              <FaHeart className="heart-icon" style={{ color: (post.likes) ? 'red' : 'gray' }} />
               {post.likes} {post.likes === 1 ? 'like' : 'likes'}
             </button>
           </div>
           <span className="genre">{post.genre}</span>
           <div className="post-tags">
-
             <span>{post.tag1}</span>
             <span style={{ marginLeft: '12px' }}>{post.tag2}</span>
           </div>

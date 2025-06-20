@@ -156,6 +156,7 @@
 .likes-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    color: #ff0000;
 }
 
 .heart-icon {
