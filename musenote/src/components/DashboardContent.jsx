@@ -148,7 +148,7 @@ const PostCard = ({ post }) => {
         if (message === "Post liked") {
           setLikes((prev) => prev + 1);
           setLiked(true);
-        } else if (message === "Post unliked") {
+        } else if (message === "Post disliked") {
           setLikes((prev) => Math.max(prev - 1, 0));
           setLiked(false);
         }
