@@ -62,6 +62,7 @@ body {
     padding: 10px 50px 10px;
     border-bottom: 1px solid #333;
     flex-wrap: wrap;
+    background-color: #0f0e0e;
 }
 
 .avatar-section {
@@ -70,8 +71,9 @@ body {
     justify-content: center;
 }
 
-.avatar-icon {
-    color: #555;
+.avatar-icon-profile {
+    color: #e6dddd;
+    margin-top: -5%;
 }
 
 .center-section {

@@ -205,7 +205,7 @@ const ProfilePage = () => {
 
       <section className="profile-top">
         <div className="avatar-section">
-          <FaUserCircle size={120} className="avatar-icon" />
+          <FaUserCircle size={120} className="avatar-icon-profile" />
         </div>
 
         <div className="center-section">
