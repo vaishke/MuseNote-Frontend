@@ -27,6 +27,7 @@ const ProfilePage = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+  const [showAccountDeleteModal, setShowAccountDeleteModal] = useState(false);
 
   const menuRef = useRef();
 
@@ -121,10 +122,7 @@ const ProfilePage = () => {
     window.location.href = "/";
   };
 
-  const handleDeleteAccount = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete your account? This cannot be undone.");
-    if (!confirmDelete) return;
-
+  const handleDeleteAccountConfirm = async () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(`http://localhost:8085/deleteUser/${username}`, {
@@ -146,7 +144,7 @@ const ProfilePage = () => {
     <div className="profile-page">
       <ToastContainer />
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Post Modal */}
       {showDeleteModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -168,6 +166,20 @@ const ProfilePage = () => {
         </div>
       )}
 
+      {/* Delete Account Modal */}
+      {showAccountDeleteModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Delete Account</h3>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <div className="modal-buttons">
+              <button className="cancel-btn" onClick={() => setShowAccountDeleteModal(false)}>Cancel</button>
+              <button className="confirm-btn" onClick={handleDeleteAccountConfirm}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="profile-header">
         <Link to="/home" className="profile-logo">
           <img src={logo} alt="Logo" className="profile-logo" />
@@ -181,7 +193,7 @@ const ProfilePage = () => {
               <button className="three-dot-btn" onClick={() => setShowProfileDropdown(!showProfileDropdown)}>⋮</button>
               {showProfileDropdown && (
                 <div className="profile-dropdown-menu">
-                  <button className="dropdown-item" onClick={handleDeleteAccount}>Delete Account</button>
+                  <button className="dropdown-item" onClick={() => setShowAccountDeleteModal(true)}>Delete Account</button>
                   <button className="dropdown-item" onClick={handleLogout}>Log Out</button>
                 </div>
               )}
