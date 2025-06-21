@@ -17,6 +17,7 @@ const PostView = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -48,7 +49,7 @@ const PostView = () => {
       .catch(() => {
         toast.error("Failed to check like status", { position: "top-center" });
       });
-    
+
     fetch(`http://localhost:8085/commentsByPost/${postId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -98,6 +99,7 @@ const PostView = () => {
   const handleCommentSubmit = () => {
     if (comment.trim()) {
       const token = localStorage.getItem('token');
+
       fetch(`http://localhost:8085/addComment/${postId}`, {
         method: 'POST',
         headers: {
@@ -204,30 +206,14 @@ const PostView = () => {
                   title="Comment on this post"
                 >
                   <FaCommentAlt className="heart-icon" />
-                  <span className="comment-label"></span>
                 </button>
               </div>
             </div>
 
             <div className="tags-container">
-              {post.tag1 && (
-                <span className="tag primary">
-                  <FaTag className="tag-icon" />
-                  {post.tag1}
-                </span>
-              )}
-              {post.tag2 && (
-                <span className="tag secondary">
-                  <FaTag className="tag-icon" />
-                  {post.tag2}
-                </span>
-              )}
-              {post.genre && (
-                <span className="tag genre-tag">
-                  <BsMusicNoteBeamed className="tag-icon" />
-                  {post.genre}
-                </span>
-              )}
+              {post.tag1 && <span className="tag primary"><FaTag className="tag-icon" />{post.tag1}</span>}
+              {post.tag2 && <span className="tag secondary"><FaTag className="tag-icon" />{post.tag2}</span>}
+              {post.genre && <span className="tag genre-tag"><BsMusicNoteBeamed className="tag-icon" />{post.genre}</span>}
             </div>
           </div>
 
@@ -286,17 +272,12 @@ const PostView = () => {
             {comments.map((c, idx) => (
               <div key={idx} className="comment-bubble">
                 <strong>{c.user?.userName}</strong>: {c.content}
-                {c.createdAt && (
-                  <div className="comment-timestamp">
-                    {new Date(c.createdAt).toLocaleString('en-IN', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short'
-                    })}
-                  </div>
-                )}
+                <div className="comment-timestamp">
+                  {new Date(c.createdAt).toLocaleString()}
+                </div>
               </div>
-
             ))}
+
           </div>
           <textarea
             className="comment-input"
