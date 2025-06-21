@@ -266,28 +266,106 @@ const PostView = () => {
         </article>
       </main>
 
-      {showCommentBox && (
-        <div className="comment-slide-up">
-          <div className="comment-list">
-            {comments.map((c, idx) => (
-              <div key={idx} className="comment-bubble">
-                <strong>{c.user?.userName}</strong>: {c.content}
-                <div className="comment-timestamp">
-                  {new Date(c.createdAt).toLocaleString()}
-                </div>
-              </div>
-            ))}
 
+{showCommentBox && (
+  <>
+    {/* Backdrop overlay */}
+    <div 
+      className="comment-backdrop"
+      onClick={() => setShowCommentBox(false)}
+    />
+    
+    {/* Sliding comment panel */}
+    <div className="comment-slide-panel">
+      <div className="comment-drag-handle">
+        <div className="drag-indicator"></div>
+      </div>
+      
+      <div className="comment-panel-header">
+        <div className="comment-header-content">
+          <div className="comment-title-section">
+            <FaCommentAlt className="comment-header-icon" />
+            <h3 className="comment-panel-title">Comments</h3>
+            <span className="comment-badge">({comments.length})</span>
           </div>
-          <textarea
-            className="comment-input"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Add a comment..."
-          />
-          <button onClick={handleCommentSubmit} className="submit-comment-btn">Post</button>
+          <button 
+            className="comment-minimize-btn"
+            onClick={() => setShowCommentBox(false)}
+            aria-label="Close comments"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M19 9L12 16L5 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
-      )}
+      </div>
+
+      <div className="comment-panel-content">
+        <div className="comments-scroll-area">
+          {comments.length === 0 ? (
+            <div className="empty-comments-state">
+              <div className="empty-icon-wrapper">
+                <FaCommentAlt className="empty-comment-icon" />
+              </div>
+              <h4>Start the conversation</h4>
+              <p>Be the first to share your thoughts about this amazing creation!</p>
+            </div>
+          ) : (
+            <div className="comments-list">
+              {comments.map((c, idx) => (
+                <div key={idx} className="comment-item">
+                  <div className="comment-bubble-content">
+                    <div className="comment-header-info">
+                      <span className="comment-author">{c.user?.userName || 'Anonymous'}</span>
+                      <span className="comment-time">
+                        {new Date(c.createdAt).toLocaleString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true
+                        })}
+                      </span>
+                    </div>
+                    <p className="comment-message">{c.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="comment-composer">
+          <div className="composer-input-area">
+
+            <div className="input-container">
+              <textarea
+                className="comment-textarea"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Share your thoughts about this creation..."
+                rows="2"
+                maxLength="500"
+              />
+              <div className="input-footer">
+                <span className="char-counter">
+                  {comment.length}/500
+                </span>
+                <button 
+                  onClick={handleCommentSubmit} 
+                  className="post-comment-button"
+                  disabled={!comment.trim()}
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </>
+)}
     </div>
   );
 };
