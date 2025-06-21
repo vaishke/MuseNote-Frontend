@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FaArrowLeft, FaHeart } from 'react-icons/fa';
-import { IoIosContact } from "react-icons/io";
+import { FaArrowLeft, FaUser, FaTag, FaPlay, FaPause, FaCommentAlt } from 'react-icons/fa';
+import { HiOutlineHeart, HiHeart } from 'react-icons/hi';
+import { BsMusicNoteBeamed } from 'react-icons/bs';
+import { RiHeadphoneLine } from 'react-icons/ri';
 import './PostView.css';
 import logo from '../assets/logo.png';
 import { ToastContainer, toast } from 'react-toastify';
@@ -11,51 +13,49 @@ const PostView = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [liked, setLiked] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showCommentBox, setShowCommentBox] = useState(false);
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    // Fetch post
     fetch(`http://localhost:8085/getPostById/${postId}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch post');
-        }
-        return res.json();
-      })
+      .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch post'))
       .then(data => {
         setPost(data);
+        setLoading(false);
       })
-      .catch(err => {
-        console.error('Error fetching post:', err);
+      .catch(() => {
         toast.error("Failed to load post", { position: "top-center" });
+        setLoading(false);
       });
 
-    // Check if liked
     fetch(`http://localhost:8085/isPostLiked/${postId}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to check like status');
-        }
-        return res.json();
-      })
-      .then(data => {
-        setLiked(data);
-      })
-      .catch(err => {
-        console.error('Error checking like status:', err);
+      .then(res => res.ok ? res.json() : Promise.reject('Failed to check like status'))
+      .then(data => setLiked(data))
+      .catch(() => {
         toast.error("Failed to check like status", { position: "top-center" });
       });
+
+    fetch(`http://localhost:8085/comments/${postId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then(data => setComments(data))
+      .catch(() => toast.error("Could not fetch comments"));
   }, [postId]);
 
   const handleLike = async () => {
@@ -69,9 +69,8 @@ const PostView = () => {
         }
       });
 
+      const message = await response.text();
       if (response.ok) {
-        const message = await response.text();
-
         if (message === "Post liked") {
           setPost(prev => ({ ...prev, likes: prev.likes + 1 }));
           setLiked(true);
@@ -80,102 +79,211 @@ const PostView = () => {
           setPost(prev => ({ ...prev, likes: Math.max(prev.likes - 1, 0) }));
           setLiked(false);
           toast.info("Post unliked", { position: "top-center" });
-        } else {
-          console.warn("Unexpected like response:", message);
-          toast.warn("Unexpected like action", { position: "top-center" });
         }
       } else {
-        const errMsg = await response.text();
-        toast.error(errMsg || "Error toggling like", { position: "top-center" });
+        toast.error(message || "Error toggling like", { position: "top-center" });
       }
-    } catch (err) {
-      console.error("Error toggling like:", err);
+    } catch {
       toast.error("Unable to like the post", { position: "top-center" });
     }
   };
 
+  const handleAudioToggle = () => {
+    const audio = document.querySelector('.audio-element');
+    if (audio) {
+      isPlaying ? audio.pause() : audio.play();
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleCommentSubmit = () => {
+    if (comment.trim()) {
+      const token = localStorage.getItem('token');
+
+      fetch(`http://localhost:8085/comment/${postId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: comment })
+      })
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(newComment => {
+          setComments(prev => [...prev, newComment]);
+          setComment('');
+          toast.success("Comment submitted!");
+        })
+        .catch(() => toast.error("Failed to post comment"));
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="magazine-container">
+        <ToastContainer />
+        <div className="loading-state">
+          <div className="loading-animation">
+            <BsMusicNoteBeamed className="loading-icon" />
+            <p>Loading your creation...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!post) {
     return (
-      <div>
+      <div className="magazine-container">
         <ToastContainer />
-        <div className="loading">Loading post...</div>
+        <div className="error-state">
+          <h2>Song not found</h2>
+          <p>This creation might have been removed or doesn't exist.</p>
+          <Link to="/home" className="back-home-link">
+            <FaArrowLeft /> Back to Home
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="magazine-container">
       <ToastContainer />
 
-      {/* Header */}
-      <div className="top-bar-postview">
-        <div className="logo-container">
-          <Link to="/home" className='logo-img-post'>
-            <img src={logo} alt="Logo" className="logo-img-home" />
+      <header className="magazine-header">
+        <div className="header-content">
+          <Link to="/home" className="logo-brand">
+            <img src={logo} alt="Logo" className="brand-logo" />
           </Link>
+
+          <div className="header-divider"></div>
+
+          <nav className="magazine-nav">
+            <Link to="/home" className="nav-item">
+              <FaArrowLeft className="nav-icon" />
+              <span>Back</span>
+            </Link>
+          </nav>
         </div>
-        <div className="back-home">
-          <Link to="/home" className="home-link">
-            <FaArrowLeft className="home-icon" />
-            <span>Back</span>
-          </Link>
-        </div>
-      </div>
+      </header>
 
-      {/* Post Content */}
-      <div className="post-view">
-        <div className="first-black">
-          <h1 className="post-title">{post.title}</h1>
+      <main className="magazine-main">
+        <article className="song-article">
+          <div className="article-header">
+            <h1 className="article-title">{post.title}</h1>
 
-          <div className="post-meta">
-            <span className="username">
-              <IoIosContact /> Posted by: 
-              {post.userreg?.userName ? (
-                <Link to={`/profile/${post.userreg.userName}`} className="username-link">
-                  @{post.userreg.userName}
-                </Link>
-              ) : (
-                <span> Unknown</span>
-              )}
-            </span>
+            <div className="article-meta">
+              <div className="artist-info">
+                <div className="artist-avatar">
+                  <FaUser className="avatar-icon" />
+                </div>
+                <div className="artist-details">
+                  <span className="artist-label">Created by</span>
+                  {post.userreg?.userName ? (
+                    <Link to={`/profile/${post.userreg.userName}`} className="artist-name">
+                      {post.userreg.userName}
+                    </Link>
+                  ) : (
+                    <span className="artist-name unknown">Anonymous Artist</span>
+                  )}
+                </div>
+              </div>
 
+              <div className="engagement-stats vertical-stack">
+                <button
+                  className={`like-button ${liked ? 'liked' : ''}`}
+                  onClick={handleLike}
+                  title={liked ? "Unlike this creation" : "Like this creation"}
+                >
+                  {liked ? <HiHeart className="heart-icon filled" /> : <HiOutlineHeart className="heart-icon" />}
+                  <span className="like-count">{post.likes}</span>
+                </button>
 
+                <button
+                  className="like-button comment-button"
+                  onClick={() => setShowCommentBox(!showCommentBox)}
+                  title="Comment on this post"
+                >
+                  <FaCommentAlt className="heart-icon" />
+                </button>
+              </div>
+            </div>
 
-            <button
-              className="likes-button"
-              onClick={handleLike}
-              title={liked ? "Click to unlike" : "Click to like"}
-            >
-              <FaHeart className="heart-icon" style={{ color: liked ? 'red' : 'gray' }} />
-              {post.likes} {post.likes === 1 ? 'like' : 'likes'}
-            </button>
-          </div>
-
-          <span className="genre">{post.genre}</span>
-
-          <div className="post-tags">
-            <span>{post.tag1}</span>
-            <span style={{ marginLeft: '12px' }}>{post.tag2}</span>
+            <div className="tags-container">
+              {post.tag1 && <span className="tag primary"><FaTag className="tag-icon" />{post.tag1}</span>}
+              {post.tag2 && <span className="tag secondary"><FaTag className="tag-icon" />{post.tag2}</span>}
+              {post.genre && <span className="tag genre-tag"><BsMusicNoteBeamed className="tag-icon" />{post.genre}</span>}
+            </div>
           </div>
 
           {post.audioFileName && (
-            <div className="audio-player">
-              <audio controls controlsList="nodownload" style={{ width: '100%' }}>
-                <source src={`http://localhost:8085/audio/${post.audioFileName}`} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
+            <div className="audio-showcase">
+              <div className="audio-header">
+                <RiHeadphoneLine className="audio-icon" />
+                <span className="audio-label">Listen to this creation</span>
+              </div>
+
+              <div className="audio-player-container">
+                <button 
+                  className="play-button"
+                  onClick={handleAudioToggle}
+                  aria-label={isPlaying ? "Pause audio" : "Play audio"}
+                >
+                  {isPlaying ? <FaPause /> : <FaPlay />}
+                </button>
+
+                <audio 
+                  className="audio-element"
+                  controls
+                  controlsList="nodownload"
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                >
+                  <source src={`http://localhost:8085/audio/${post.audioFileName}`} type="audio/mpeg" />
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
             </div>
           )}
-        </div>
 
-        <div className="post-body">
-          <div className="lyric">
-            {post.content.split('\n').map((line, index) => (
-              <p key={index}>{line}</p>
+          <div className="article-body">
+            <div className="content-header reduced-header">
+              <h2 className="content-title">Lyrics</h2>
+              <div className="content-divider"></div>
+            </div>
+
+            <div className="lyrics-container">
+              <div className="lyrics-content">
+                {post.content.split('\n').map((line, index) => (
+                  <div key={index} className="lyric-line">
+                    <p className="line-text">{line || '\u00A0'}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </article>
+      </main>
+
+      {showCommentBox && (
+        <div className="comment-slide-up">
+          <div className="comment-list">
+            {comments.map((c, idx) => (
+              <div key={idx} className="comment-bubble">
+                <strong>{c.username}:</strong> {c.content}
+              </div>
             ))}
           </div>
+          <textarea
+            className="comment-input"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Add a comment..."
+          />
+          <button onClick={handleCommentSubmit} className="submit-comment-btn">Post</button>
         </div>
-      </div>
+      )}
     </div>
   );
 };
