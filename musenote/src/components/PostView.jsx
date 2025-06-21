@@ -17,7 +17,6 @@ const PostView = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -49,13 +48,6 @@ const PostView = () => {
       .catch(() => {
         toast.error("Failed to check like status", { position: "top-center" });
       });
-
-    fetch(`http://localhost:8085/comments/${postId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => res.ok ? res.json() : Promise.reject())
-      .then(data => setComments(data))
-      .catch(() => toast.error("Could not fetch comments"));
   }, [postId]);
 
   const handleLike = async () => {
@@ -98,23 +90,9 @@ const PostView = () => {
 
   const handleCommentSubmit = () => {
     if (comment.trim()) {
-      const token = localStorage.getItem('token');
-
-      fetch(`http://localhost:8085/comment/${postId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ content: comment })
-      })
-        .then(res => res.ok ? res.json() : Promise.reject())
-        .then(newComment => {
-          setComments(prev => [...prev, newComment]);
-          setComment('');
-          toast.success("Comment submitted!");
-        })
-        .catch(() => toast.error("Failed to post comment"));
+      toast.success("Comment submitted!");
+      setComment('');
+      setShowCommentBox(false);
     }
   };
 
@@ -206,14 +184,30 @@ const PostView = () => {
                   title="Comment on this post"
                 >
                   <FaCommentAlt className="heart-icon" />
+                  <span className="comment-label"></span>
                 </button>
               </div>
             </div>
 
             <div className="tags-container">
-              {post.tag1 && <span className="tag primary"><FaTag className="tag-icon" />{post.tag1}</span>}
-              {post.tag2 && <span className="tag secondary"><FaTag className="tag-icon" />{post.tag2}</span>}
-              {post.genre && <span className="tag genre-tag"><BsMusicNoteBeamed className="tag-icon" />{post.genre}</span>}
+              {post.tag1 && (
+                <span className="tag primary">
+                  <FaTag className="tag-icon" />
+                  {post.tag1}
+                </span>
+              )}
+              {post.tag2 && (
+                <span className="tag secondary">
+                  <FaTag className="tag-icon" />
+                  {post.tag2}
+                </span>
+              )}
+              {post.genre && (
+                <span className="tag genre-tag">
+                  <BsMusicNoteBeamed className="tag-icon" />
+                  {post.genre}
+                </span>
+              )}
             </div>
           </div>
 
@@ -268,13 +262,6 @@ const PostView = () => {
 
       {showCommentBox && (
         <div className="comment-slide-up">
-          <div className="comment-list">
-            {comments.map((c, idx) => (
-              <div key={idx} className="comment-bubble">
-                <strong>{c.username}:</strong> {c.content}
-              </div>
-            ))}
-          </div>
           <textarea
             className="comment-input"
             value={comment}
