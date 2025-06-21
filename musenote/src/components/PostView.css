@@ -10,7 +10,7 @@
     border-radius: 15px;
     width: 70%;
     background-color: #06daa9ab;
-    box-shadow: 0 20px 80px rgb(5, 207, 180);
+    box-shadow: 0 20px 15px rgb(5, 207, 180);
 }
 
 .top-bar-postview {
@@ -117,7 +117,7 @@
 .post-body p {
     margin-bottom: 12px;
     font-family: 'Bodoni Moda', serif;
-    margin-left: 12%;
+    margin-left: 1%;
     line-height: 1.6;
     white-space: pre-wrap;
     padding-bottom: 0.5%;
@@ -168,4 +168,79 @@
     padding: 10px;
     border-radius: 8px;
     width: 100%;
+}
+
+.lyric {
+    border: none;
+    background-color: #2e2e2ec4;
+    border-radius: 10px;
+    max-height: 20rem;
+    overflow-y: auto;
+    margin: 1% 4%;
+    padding: 1rem;
+    font-family: 'Bodoni Moda', serif;
+    color: #f3f3f3;
+    font-size: 1rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    text-align: justify;
+}
+
+.post-title {
+    font-size: 28px;
+    font-family: 'Lora', serif;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: #ffffff;
+}
+
+.genre {
+    font-size: 15px;
+    color: #00ffee;
+    margin-left: 2%;
+    margin-bottom: 0.5rem;
+    display: block;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.post-tags {
+    margin-left: 2%;
+    margin-bottom: 1rem;
+}
+
+.post-tags span {
+    background-color: #222;
+    color: #76d1ff;
+    border-radius: 20px;
+    padding: 5px 12px;
+    margin-right: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.likes-button {
+    background: none;
+    border: none;
+    color: crimson;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+    margin-right: 3%;
+    margin-left: auto;
+}
+
+.username-link {
+    color: #4fc3f7;
+    margin-left: 5px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.username-link:hover {
+    text-decoration: underline;
 }

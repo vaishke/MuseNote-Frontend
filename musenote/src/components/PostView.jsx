@@ -22,7 +22,12 @@ const PostView = () => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch post');
+        }
+        return res.json();
+      })
       .then(data => {
         setPost(data);
       })
@@ -38,7 +43,12 @@ const PostView = () => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to check like status');
+        }
+        return res.json();
+      })
       .then(data => {
         setLiked(data);
       })
@@ -96,7 +106,7 @@ const PostView = () => {
   return (
     <div>
       <ToastContainer />
-      
+
       {/* Header */}
       <div className="top-bar-postview">
         <div className="logo-container">
@@ -119,8 +129,17 @@ const PostView = () => {
 
           <div className="post-meta">
             <span className="username">
-              <IoIosContact /> Posted by: @{post.userreg?.userName || 'Unknown'}
+              <IoIosContact /> Posted by: 
+              {post.userreg?.userName ? (
+                <Link to={`/profile/${post.userreg.userName}`} className="username-link">
+                  @{post.userreg.userName}
+                </Link>
+              ) : (
+                <span> Unknown</span>
+              )}
             </span>
+
+
 
             <button
               className="likes-button"

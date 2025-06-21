@@ -171,7 +171,12 @@ const PostCard = ({ post }) => {
 
       <Link to={`/postview/${post.postId}`} className="post-link">
         <h3>{post.title}</h3>
-        <p>{post.content}</p>
+        <p>
+          {post.content.length > 100
+            ? post.content.slice(0, post.content.lastIndexOf(" ", 70)) + "....."
+            : post.content}
+        </p>
+
       </Link>
 
       <div className="like-section">
