@@ -49,8 +49,8 @@ const PostView = () => {
       .catch(() => {
         toast.error("Failed to check like status", { position: "top-center" });
       });
-
-    fetch(`http://localhost:8085/comments/${postId}`, {
+    
+    fetch(`http://localhost:8085/commentsByPost/${postId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.ok ? res.json() : Promise.reject())
@@ -99,8 +99,7 @@ const PostView = () => {
   const handleCommentSubmit = () => {
     if (comment.trim()) {
       const token = localStorage.getItem('token');
-
-      fetch(`http://localhost:8085/comment/${postId}`, {
+      fetch(`http://localhost:8085/addComment/${postId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -271,8 +270,17 @@ const PostView = () => {
           <div className="comment-list">
             {comments.map((c, idx) => (
               <div key={idx} className="comment-bubble">
-                <strong>{c.username}:</strong> {c.content}
+                <strong>{c.user?.userName}</strong>: {c.content}
+                {c.createdAt && (
+                  <div className="comment-timestamp">
+                    {new Date(c.createdAt).toLocaleString('en-IN', {
+                      dateStyle: 'medium',
+                      timeStyle: 'short'
+                    })}
+                  </div>
+                )}
               </div>
+
             ))}
           </div>
           <textarea
