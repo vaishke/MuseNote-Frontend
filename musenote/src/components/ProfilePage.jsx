@@ -125,9 +125,10 @@ const ProfilePage = () => {
   const handleDeleteAccountConfirm = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8085/deleteUser/${username}`, {
+      await axios.delete(`http://localhost:8085/deleteAccount/${username}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+
 
       toast.success("Account deleted.", { position: "top-center" });
       localStorage.removeItem("token");
