@@ -9,6 +9,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ChatPanel from './ChatPanel'; 
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -28,6 +29,7 @@ const ProfilePage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
   const [showAccountDeleteModal, setShowAccountDeleteModal] = useState(false);
+  const [showChatPanel, setShowChatPanel] = useState(false); // ✅ Chat panel toggle
 
   const menuRef = useRef();
 
@@ -128,7 +130,6 @@ const ProfilePage = () => {
       await axios.delete(`http://localhost:8085/deleteAccount/${username}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
 
       toast.success("Account deleted.", { position: "top-center" });
       localStorage.removeItem("token");
@@ -231,27 +232,33 @@ const ProfilePage = () => {
           </div>
 
           {currentUser && currentUser !== username && (
-            <button
-              className={`follow-btn ${isFollowing ? 'unfollow' : 'follow'}`}
-              onClick={async () => {
-                try {
-                  const token = localStorage.getItem("token");
-                  const endpoint = isFollowing ? "/unfollow" : "/follow";
-                  await axios.post(`http://localhost:8085${endpoint}`, {
-                    follower: currentUser,
-                    followee: username
-                  }, {
-                    headers: { Authorization: `Bearer ${token}` }
-                  });
-                  setIsFollowing(!isFollowing);
-                  setFollowers(prev => isFollowing ? prev - 1 : prev + 1);
-                } catch (err) {
-                  console.error("Follow/unfollow failed:", err);
-                }
-              }}
-            >
-              {isFollowing ? "Unfollow" : "Follow"}
-            </button>
+            <>
+              <button
+                className={`follow-btn ${isFollowing ? 'unfollow' : 'follow'}`}
+                onClick={async () => {
+                  try {
+                    const token = localStorage.getItem("token");
+                    const endpoint = isFollowing ? "/unfollow" : "/follow";
+                    await axios.post(`http://localhost:8085${endpoint}`, {
+                      follower: currentUser,
+                      followee: username
+                    }, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    });
+                    setIsFollowing(!isFollowing);
+                    setFollowers(prev => isFollowing ? prev - 1 : prev + 1);
+                  } catch (err) {
+                    console.error("Follow/unfollow failed:", err);
+                  }
+                }}
+              >
+                {isFollowing ? "Unfollow" : "Follow"}
+              </button>
+
+              <button className="chat-btn" onClick={() => setShowChatPanel(true)}>
+                Chat
+              </button>
+            </>
           )}
         </div>
 
@@ -337,6 +344,14 @@ const ProfilePage = () => {
           )}
         </div>
       </div>
+
+      {showChatPanel && (
+        <ChatPanel
+          senderUsername={currentUser}
+          receiverUsername={username}
+          onClose={() => setShowChatPanel(false)}
+        />
+      )}
     </div>
   );
 };
