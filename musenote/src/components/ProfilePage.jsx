@@ -29,7 +29,7 @@ const ProfilePage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
   const [showAccountDeleteModal, setShowAccountDeleteModal] = useState(false);
-  const [showChatPanel, setShowChatPanel] = useState(false); // ✅ Chat panel toggle
+  const [showChatPanel, setShowChatPanel] = useState(false);
 
   const menuRef = useRef();
 
@@ -143,214 +143,223 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="profile-page">
-      <ToastContainer />
+    <div className={`profile-page-container ${showChatPanel ? 'chat-active' : ''}`}>
+      <div className="profile-content">
+        <div className="profile-page">
+          <ToastContainer />
 
-      {/* Delete Post Modal */}
-      {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Confirm Delete</h3>
-            <p>Are you sure you want to delete this post? This action cannot be undone.</p>
-            <div className="modal-buttons">
-              <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>Cancel</button>
-              <button
-                className="confirm-btn"
-                onClick={() => {
-                  handleDelete(postToDelete);
-                  setShowDeleteModal(false);
-                }}
-              >
-                Delete
-              </button>
+          {/* Delete Post Modal */}
+          {showDeleteModal && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h3>Confirm Delete</h3>
+                <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+                <div className="modal-buttons">
+                  <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>Cancel</button>
+                  <button
+                    className="confirm-btn"
+                    onClick={() => {
+                      handleDelete(postToDelete);
+                      setShowDeleteModal(false);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* Delete Account Modal */}
-      {showAccountDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Delete Account</h3>
-            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
-            <div className="modal-buttons">
-              <button className="cancel-btn" onClick={() => setShowAccountDeleteModal(false)}>Cancel</button>
-              <button className="confirm-btn" onClick={handleDeleteAccountConfirm}>Delete</button>
+          {/* Delete Account Modal */}
+          {showAccountDeleteModal && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h3>Delete Account</h3>
+                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                <div className="modal-buttons">
+                  <button className="cancel-btn" onClick={() => setShowAccountDeleteModal(false)}>Cancel</button>
+                  <button className="confirm-btn" onClick={handleDeleteAccountConfirm}>Delete</button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      <header className="profile-header">
-        <Link to="/home" className="profile-logo">
-          <img src={logo} alt="Logo" className="profile-logo" />
-        </Link>
-        <div className="header-right">
-          <Link to="/home" className="back-btn">
-            <FaArrowLeft style={{ marginRight: '8px' }} /> Back
-          </Link>
-          {currentUser === username && (
-            <div className="profile-menu" ref={menuRef}>
-              <button className="three-dot-btn" onClick={() => setShowProfileDropdown(!showProfileDropdown)}>⋮</button>
-              {showProfileDropdown && (
-                <div className="profile-dropdown-menu">
-                  <button className="dropdown-item" onClick={() => setShowAccountDeleteModal(true)}>Delete Account</button>
-                  <button className="dropdown-item" onClick={handleLogout}>Log Out</button>
+          <header className="profile-header">
+            <Link to="/home" className="profile-logo">
+              <img src={logo} alt="Logo" className="profile-logo" />
+            </Link>
+            <div className="header-right">
+              <Link to="/home" className="back-btn">
+                <FaArrowLeft style={{ marginRight: '8px' }} /> Back
+              </Link>
+              {currentUser === username && (
+                <div className="profile-menu" ref={menuRef}>
+                  <button className="three-dot-btn" onClick={() => setShowProfileDropdown(!showProfileDropdown)}>⋮</button>
+                  {showProfileDropdown && (
+                    <div className="profile-dropdown-menu">
+                      <button className="dropdown-item" onClick={() => setShowAccountDeleteModal(true)}>Delete Account</button>
+                      <button className="dropdown-item" onClick={handleLogout}>Log Out</button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </header>
+
+          <section className="profile-top">
+            <div className="avatar-section">
+              <FaUserCircle size={120} className="avatar-icon-profile" />
+            </div>
+
+            <div className="center-section">
+              <div className="bio-div">
+                <h2 className="profile-username">{username}</h2>
+                {editingBio ? (
+                  <>
+                    <textarea
+                      className="bio-edit-text"
+                      value={newBio}
+                      onChange={(e) => setNewBio(e.target.value)}
+                    />
+                    <button onClick={handleSave}><MdSave /></button>
+                  </>
+                ) : (
+                  <>
+                    <p className="bio">{bio || 'No bio yet'}</p>
+                    {currentUser === username && (
+                      <button onClick={handleEdit}><MdModeEdit /></button>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {currentUser && currentUser !== username && (
+                <div className="action-buttons">
+                  <button
+                    className={`follow-btn ${isFollowing ? 'unfollow' : 'follow'}`}
+                    onClick={async () => {
+                      try {
+                        const token = localStorage.getItem("token");
+                        const endpoint = isFollowing ? "/unfollow" : "/follow";
+                        await axios.post(`http://localhost:8085${endpoint}`, {
+                          follower: currentUser,
+                          followee: username
+                        }, {
+                          headers: { Authorization: `Bearer ${token}` }
+                        });
+                        setIsFollowing(!isFollowing);
+                        setFollowers(prev => isFollowing ? prev - 1 : prev + 1);
+                      } catch (err) {
+                        console.error("Follow/unfollow failed:", err);
+                      }
+                    }}
+                  >
+                    {isFollowing ? "Unfollow" : "Follow"}
+                  </button>
+
+                  <button 
+                    className={`chat-btn ${showChatPanel ? 'active' : ''}`} 
+                    onClick={() => setShowChatPanel(!showChatPanel)}
+                  >
+                    Chat
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="right-section">
+              <div className="stats" onClick={() => setShowFollowers(!showFollowers)}>
+                <strong>{followers}</strong><span>Followers</span>
+              </div>
+              <div className="stats" onClick={() => setShowFollowing(!showFollowing)}>
+                <strong>{following}</strong><span>Following</span>
+              </div>
+            </div>
+          </section>
+
+          {(showFollowers || showFollowing) && (
+            <div className="follow-lists-container">
+              {showFollowers && (
+                <div className="follow-list">
+                  <h4>Followers</h4>
+                  <ul>
+                    {followersList.length === 0 ? (
+                      <li>No followers yet.</li>
+                    ) : (
+                      followersList.map((f, i) => (
+                        <li key={i}><Link to={`/profile/${f}`}>{f}</Link></li>
+                      ))
+                    )}
+                  </ul>
+                </div>
+              )}
+              {showFollowing && (
+                <div className="follow-list">
+                  <h4>Following</h4>
+                  <ul>
+                    {followingList.length === 0 ? (
+                      <li>Not following anyone yet.</li>
+                    ) : (
+                      followingList.map((f, i) => (
+                        <li key={i}><Link to={`/profile/${f}`}>{f}</Link></li>
+                      ))
+                    )}
+                  </ul>
                 </div>
               )}
             </div>
           )}
-        </div>
-      </header>
 
-      <section className="profile-top">
-        <div className="avatar-section">
-          <FaUserCircle size={120} className="avatar-icon-profile" />
-        </div>
-
-        <div className="center-section">
-          <div className="bio-div">
-            <h2 className="profile-username">{username}</h2>
-            {editingBio ? (
-              <>
-                <textarea
-                  className="bio-edit-text"
-                  value={newBio}
-                  onChange={(e) => setNewBio(e.target.value)}
-                />
-                <button onClick={handleSave}><MdSave /></button>
-              </>
-            ) : (
-              <>
-                <p className="bio">{bio || 'No bio yet'}</p>
-                {currentUser === username && (
-                  <button onClick={handleEdit}><MdModeEdit /></button>
-                )}
-              </>
-            )}
-          </div>
-
-          {currentUser && currentUser !== username && (
-            <>
-              <button
-                className={`follow-btn ${isFollowing ? 'unfollow' : 'follow'}`}
-                onClick={async () => {
-                  try {
-                    const token = localStorage.getItem("token");
-                    const endpoint = isFollowing ? "/unfollow" : "/follow";
-                    await axios.post(`http://localhost:8085${endpoint}`, {
-                      follower: currentUser,
-                      followee: username
-                    }, {
-                      headers: { Authorization: `Bearer ${token}` }
-                    });
-                    setIsFollowing(!isFollowing);
-                    setFollowers(prev => isFollowing ? prev - 1 : prev + 1);
-                  } catch (err) {
-                    console.error("Follow/unfollow failed:", err);
-                  }
-                }}
-              >
-                {isFollowing ? "Unfollow" : "Follow"}
-              </button>
-
-              <button className="chat-btn" onClick={() => setShowChatPanel(true)}>
-                Chat
-              </button>
-            </>
-          )}
-        </div>
-
-        <div className="right-section">
-          <div className="stats" onClick={() => setShowFollowers(!showFollowers)}>
-            <strong>{followers}</strong><span>Followers</span>
-          </div>
-          <div className="stats" onClick={() => setShowFollowing(!showFollowing)}>
-            <strong>{following}</strong><span>Following</span>
-          </div>
-        </div>
-      </section>
-
-      {(showFollowers || showFollowing) && (
-        <div className="follow-lists-container">
-          {showFollowers && (
-            <div className="follow-list">
-              <h4>Followers</h4>
-              <ul>
-                {followersList.length === 0 ? (
-                  <li>No followers yet.</li>
-                ) : (
-                  followersList.map((f, i) => (
-                    <li key={i}><Link to={`/profile/${f}`}>{f}</Link></li>
-                  ))
-                )}
-              </ul>
-            </div>
-          )}
-          {showFollowing && (
-            <div className="follow-list">
-              <h4>Following</h4>
-              <ul>
-                {followingList.length === 0 ? (
-                  <li>Not following anyone yet.</li>
-                ) : (
-                  followingList.map((f, i) => (
-                    <li key={i}><Link to={`/profile/${f}`}>{f}</Link></li>
-                  ))
-                )}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-
-      <div className="posts-box">
-        <div className="posts-header">
-          <h3 className="section-title">{username} Posts</h3>
-          {currentUser === username && (
-            <Link to="/create">
-              <button className="add-lyrics-btn" title="Add New Lyrics">Create Post</button>
-            </Link>
-          )}
-        </div>
-        <div className="posts-column">
-          {posts.length === 0 ? (
-            <p className="no-posts-message">No posts yet.</p>
-          ) : (
-            posts.map((post) => (
-              <div className="post-container" key={post.postId}>
-                <Link to={`/postview/${post.postId}`} className="post-link">
-                  <PostPreview
-                    title={post.title}
-                    content={post.content}
-                    likes={post.likes || 0}
-                  />
+          <div className="posts-box">
+            <div className="posts-header">
+              <h3 className="section-title">{username} Posts</h3>
+              {currentUser === username && (
+                <Link to="/create">
+                  <button className="add-lyrics-btn" title="Add New Lyrics">Create Post</button>
                 </Link>
-                {currentUser === username && (
-                  <button
-                    className="delete-btn"
-                    onClick={() => {
-                      setPostToDelete(post.postId);
-                      setShowDeleteModal(true);
-                    }}
-                    title="Delete this post"
-                  >
-                    <MdDelete />
-                  </button>
-                )}
-              </div>
-            ))
-          )}
+              )}
+            </div>
+            <div className="posts-column">
+              {posts.length === 0 ? (
+                <p className="no-posts-message">No posts yet.</p>
+              ) : (
+                posts.map((post) => (
+                  <div className="post-container" key={post.postId}>
+                    <Link to={`/postview/${post.postId}`} className="post-link">
+                      <PostPreview
+                        title={post.title}
+                        content={post.content}
+                        likes={post.likes || 0}
+                      />
+                    </Link>
+                    {currentUser === username && (
+                      <button
+                        className="delete-btn"
+                        onClick={() => {
+                          setPostToDelete(post.postId);
+                          setShowDeleteModal(true);
+                        }}
+                        title="Delete this post"
+                      >
+                        <MdDelete />
+                      </button>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
       {showChatPanel && (
-        <ChatPanel
-          senderUsername={currentUser}
-          receiverUsername={username}
-          onClose={() => setShowChatPanel(false)}
-        />
+        <div className="chat-section">
+          <ChatPanel
+            senderUsername={currentUser}
+            receiverUsername={username}
+            onClose={() => setShowChatPanel(false)}
+          />
+        </div>
       )}
     </div>
   );
